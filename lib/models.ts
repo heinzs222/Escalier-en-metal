@@ -638,6 +638,8 @@ export interface StairConfiguration {
   componentSettings: Record<string, ComponentArraySettings>
   componentTextures: Record<string, string>
   selectedAngleType?: string
+  selectedBottomAngle?: "left" | "right" | "none"
+  selectedTopAngle?: "left" | "right" | "none"
 }
 
 /**

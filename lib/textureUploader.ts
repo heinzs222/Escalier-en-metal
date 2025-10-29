@@ -1,4 +1,4 @@
-// Texture uploader utility functions
+
 export interface UploadedTextureMap {
   type: "diffuse" | "normal" | "roughness" | "metalness" | "ao" | "specular" | "glossiness"
   file: File
@@ -20,7 +20,7 @@ export interface UploadedTexture {
   isCustom: true
 }
 
-// Supported image formats
+
 export const SUPPORTED_FORMATS = ["image/jpeg", "image/jpg", "image/png", "image/webp", "image/bmp", "image/tiff"]
 
 export const MAP_TYPES = [
@@ -42,7 +42,7 @@ export function validateImageFile(file: File): { valid: boolean; error?: string 
     }
   }
 
-  // Check file size (max 10MB)
+
   const maxSize = 10 * 1024 * 1024
   if (file.size > maxSize) {
     return {
@@ -54,7 +54,7 @@ export function validateImageFile(file: File): { valid: boolean; error?: string 
   return { valid: true }
 }
 
-// Convert file to data URL
+
 export function fileToDataUrl(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
@@ -64,7 +64,7 @@ export function fileToDataUrl(file: File): Promise<string> {
   })
 }
 
-// Generate texture ID from name
+
 export function generateTextureId(name: string, category: "wood" | "metal"): string {
   const cleanName = name
     .toLowerCase()

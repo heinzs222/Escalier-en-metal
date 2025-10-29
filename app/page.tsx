@@ -41,6 +41,8 @@ export default function Home() {
   const [componentTextures, setComponentTextures] = useState<Record<string, string>>({})
   const [availableTextures, setAvailableTextures] = useState<ReturnType<typeof getTextures>>([])  
   const [selectedAngleType, setSelectedAngleType] = useState<string>("middle")
+  const [selectedBottomAngle, setSelectedBottomAngle] = useState<"none" | "left" | "right">("none")
+  const [selectedTopAngle, setSelectedTopAngle] = useState<"none" | "left" | "right">("none")
 
   const categories = getAllCategories()
   const allModels = getAllModels()
@@ -68,6 +70,8 @@ export default function Home() {
         setComponentSettings(savedConfig.componentSettings)
         setComponentTextures(savedConfig.componentTextures)
         setSelectedAngleType(savedConfig.selectedAngleType || "middle")
+        setSelectedBottomAngle(savedConfig.selectedBottomAngle || "none")
+        setSelectedTopAngle(savedConfig.selectedTopAngle || "none")
         console.log("✅ Restored unified configuration")
       } else {
         console.warn(`⚠️ Saved model "${savedConfig.modelId}" not found, using default`)
@@ -121,10 +125,22 @@ export default function Home() {
       componentSettings,
       componentTextures,
       selectedAngleType,
+      selectedBottomAngle,
+      selectedTopAngle,
     }
 
     saveStairConfiguration(configToSave)
-  }, [selectedModelId, globalScale, globalArrayMultiplier, componentSettings, componentTextures, selectedAngleType, isInitialized])
+  }, [
+    selectedModelId,
+    globalScale,
+    globalArrayMultiplier,
+    componentSettings,
+    componentTextures,
+    selectedAngleType,
+    selectedBottomAngle,
+    selectedTopAngle,
+    isInitialized,
+  ])
 
   const vectorsClose = (a: [number, number, number], b: [number, number, number], epsilon = 1e-4) => {
     return Math.abs(a[0] - b[0]) < epsilon && Math.abs(a[1] - b[1]) < epsilon && Math.abs(a[2] - b[2]) < epsilon
@@ -169,7 +185,8 @@ export default function Home() {
       }
 
       if (next.step) {
-        const basePosition: [number, number, number] = [0, 0, 0]
+        const raiseY = selectedBottomAngle !== "none" ? 20.0 : 0
+        const basePosition: [number, number, number] = [0, raiseY, 0]
         if (!vectorsClose(next.step.spacing, spacing) || !vectorsClose(next.step.basePosition, basePosition)) {
           next.step = { ...next.step, spacing, basePosition }
           changed = true
@@ -178,7 +195,8 @@ export default function Home() {
 
       if (next.step1 && next.step) {
         const spacingStep1: [number, number, number] = [spacing[0], spacing[1], 0]
-        const basePosition: [number, number, number] = [0, 0, 0]
+        const raiseY = selectedBottomAngle !== "none" ? 20.0 : 0
+        const basePosition: [number, number, number] = [0, raiseY, 0]
         if (!vectorsClose(next.step1.spacing, spacingStep1) || !vectorsClose(next.step1.basePosition, basePosition)) {
           next.step1 = { ...next.step1, spacing: spacingStep1, basePosition }
           changed = true
@@ -187,7 +205,7 @@ export default function Home() {
 
       return changed ? next : prev
     })
-  }, [modelConfig, globalArrayMultiplier, componentSettings.step?.count, componentSettings.step1?.count])
+  }, [modelConfig, globalArrayMultiplier, componentSettings.step?.count, componentSettings.step1?.count, selectedBottomAngle])
 
   const calculatePrice = () => {
     if (!modelConfig) return 0
@@ -215,6 +233,29 @@ export default function Home() {
   }
 
   const effectiveStepCount = getEffectiveCount("step", componentSettings, globalArrayMultiplier)
+  const ANGLE_Z_OFFSET = 29.0
+  const BOTTOM_Y_OFFSET = -19.4
+  const BOTTOM_X_OFFSET = 10.0
+  const BOTTOM_RIGHT_X_NUDGE = 47.0
+  const BOTTOM_RIGHT_Z_NUDGE = -58.1
+  const TOP_RIGHT_X_NUDGE = 18.0
+  const TOP_RIGHT_Y_NUDGE = -8.0
+  const TOP_RIGHT_Z_NUDGE = 18.9
+  const TOP_LEFT_X_NUDGE = 18.0
+  const TOP_LEFT_Y_NUDGE = -8.0
+  const TOP_LEFT_Z_NUDGE = -29.3
+  const bottomBase = calculatePosition("step", -1, componentSettings, globalArrayMultiplier)
+  const bottomAnglePosition: [number, number, number] = [
+    bottomBase[0] + (selectedBottomAngle === "left" ? BOTTOM_X_OFFSET : 0) + (selectedBottomAngle === "right" ? BOTTOM_X_OFFSET + BOTTOM_RIGHT_X_NUDGE : 0),
+    bottomBase[1] + BOTTOM_Y_OFFSET,
+    bottomBase[2] + ANGLE_Z_OFFSET + (selectedBottomAngle === "right" ? BOTTOM_RIGHT_Z_NUDGE : 0),
+  ]
+  const topBase = calculatePosition("step", effectiveStepCount, componentSettings, globalArrayMultiplier)
+  const topAnglePosition: [number, number, number] = [
+    topBase[0] + (selectedTopAngle === "right" ? TOP_RIGHT_X_NUDGE : 0) + (selectedTopAngle === "left" ? TOP_LEFT_X_NUDGE : 0),
+    topBase[1] + (selectedTopAngle === "right" ? TOP_RIGHT_Y_NUDGE : 0) + (selectedTopAngle === "left" ? TOP_LEFT_Y_NUDGE : 0),
+    topBase[2] + ANGLE_Z_OFFSET + (selectedTopAngle === "right" ? TOP_RIGHT_Z_NUDGE : 0) + (selectedTopAngle === "left" ? TOP_LEFT_Z_NUDGE : 0),
+  ]
 
   return (
     <div className="flex flex-col h-screen bg-gradient-to-br from-slate-50 to-slate-100">
@@ -268,7 +309,20 @@ export default function Home() {
                 <hemisphereLight intensity={0.4} groundColor="#b1b1b1" />
 
                 <group scale={globalScale}>
-                  {modelConfig.components.base && componentSettings.base.enabled && (
+                  {selectedBottomAngle !== "none" && (
+                    <StairModule
+                      key="angle-bottom"
+                      url={
+                        selectedBottomAngle === "left"
+                          ? "/models/limon_central/angle_left_bottom_side.glb"
+                          : "/models/limon_central/angle_right_bottom_side.glb"
+                      }
+                      textureId={componentTextures.step || modelConfig.components.step?.defaultTexture || "painted-metal"}
+                      position={bottomAnglePosition}
+                      rotation={[0, selectedBottomAngle === "left" ? Math.PI / 2 + Math.PI : Math.PI / 2, 0]}
+                    />
+                  )}
+                  {selectedBottomAngle === "none" && modelConfig.components.base && componentSettings.base.enabled && (
                     <>
                       {Array.from(
                         { length: getEffectiveCount("base", componentSettings, globalArrayMultiplier) },
@@ -285,7 +339,7 @@ export default function Home() {
                       )}
                     </>
                   )}
-                  {modelConfig.components.base && !componentSettings.base.enabled && (
+                  {selectedBottomAngle === "none" && modelConfig.components.base && !componentSettings.base.enabled && (
                     <StairModule
                       url={modelConfig.components.base!.url}
                       textureId={
@@ -347,11 +401,25 @@ export default function Home() {
                       )}
                     </>
                   )}
-                  {modelConfig.components.top && !componentSettings.top.enabled && (
+                  {selectedTopAngle === "none" && modelConfig.components.top && !componentSettings.top.enabled && (
                     <StairModule
                       url={modelConfig.components.top!.url}
                       textureId={componentTextures.top || modelConfig.components.top!.defaultTexture || "painted-metal"}
                       position={calculatePosition("top", 0, componentSettings, globalArrayMultiplier)}
+                    />
+                  )}
+
+                  {selectedTopAngle !== "none" && (
+                    <StairModule
+                      key="angle-top"
+                      url={
+                        selectedTopAngle === "left"
+                          ? "/models/limon_central/angle_left_top_side.glb"
+                          : "/models/limon_central/angle_right_top_side.glb"
+                      }
+                      textureId={componentTextures.step || modelConfig.components.step?.defaultTexture || "painted-metal"}
+                      position={topAnglePosition}
+                      rotation={[0, selectedTopAngle === "left" ? Math.PI * 2 : 0, 0]}
                     />
                   )}
                 </group>
@@ -550,6 +618,44 @@ export default function Home() {
                       <Badge variant={modelConfig.metadata.isCustom ? "secondary" : "default"}>
                         {modelConfig.metadata.isCustom ? "Custom" : "Built-in"}
                       </Badge>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="model" className="space-y-4 mt-0">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Angles</CardTitle>
+                    <CardDescription>Select optional angles at bottom and top</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="space-y-2">
+                      <Label>Bottom Angle</Label>
+                      <Select value={selectedBottomAngle} onValueChange={(v) => setSelectedBottomAngle(v as any)}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="none">None</SelectItem>
+                          <SelectItem value="left">Left</SelectItem>
+                          <SelectItem value="right">Right</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label>Top Angle</Label>
+                      <Select value={selectedTopAngle} onValueChange={(v) => setSelectedTopAngle(v as any)}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="none">None</SelectItem>
+                          <SelectItem value="left">Left</SelectItem>
+                          <SelectItem value="right">Right</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
                   </CardContent>
                 </Card>
