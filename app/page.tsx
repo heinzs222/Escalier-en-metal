@@ -37,6 +37,7 @@ export default function Home() {
 
   const [globalScale, setGlobalScale] = useState(0.01)
   const [globalArrayMultiplier, setGlobalArrayMultiplier] = useState(1.0)
+  const [treadScale, setTreadScale] = useState(1.0)
   const [componentSettings, setComponentSettings] = useState<Record<string, ComponentArraySettings>>({})
   const [componentTextures, setComponentTextures] = useState<Record<string, string>>({})
   const [availableTextures, setAvailableTextures] = useState<ReturnType<typeof getTextures>>([])  
@@ -142,6 +143,28 @@ export default function Home() {
     isInitialized,
   ])
 
+  useEffect(() => {
+    const onStorage = (e: StorageEvent) => {
+      if (e.key !== "stair_unified_configuration") return
+      const saved = loadStairConfiguration()
+      if (!saved) return
+      const modelExists = allModels.some((m) => m.id === saved.modelId)
+      if (!modelExists) return
+
+      setSelectedModelId(saved.modelId)
+      setGlobalScale(saved.globalScale)
+      setGlobalArrayMultiplier(saved.globalArrayMultiplier)
+      setComponentSettings(saved.componentSettings)
+      setComponentTextures(saved.componentTextures)
+      if (saved.selectedAngleType) setSelectedAngleType(saved.selectedAngleType)
+      if (typeof saved.selectedBottomAngle !== "undefined") setSelectedBottomAngle(saved.selectedBottomAngle)
+      if (typeof saved.selectedTopAngle !== "undefined") setSelectedTopAngle(saved.selectedTopAngle)
+    }
+
+    window.addEventListener("storage", onStorage)
+    return () => window.removeEventListener("storage", onStorage)
+  }, [allModels])
+
   const vectorsClose = (a: [number, number, number], b: [number, number, number], epsilon = 1e-4) => {
     return Math.abs(a[0] - b[0]) < epsilon && Math.abs(a[1] - b[1]) < epsilon && Math.abs(a[2] - b[2]) < epsilon
   }
@@ -233,9 +256,9 @@ export default function Home() {
   }
 
   const effectiveStepCount = getEffectiveCount("step", componentSettings, globalArrayMultiplier)
-  const ANGLE_Z_OFFSET = 29.0
-  const BOTTOM_Y_OFFSET = -19.4
-  const BOTTOM_X_OFFSET = 10.0
+  const ANGLE_Z_OFFSET = 29.2
+  const BOTTOM_Y_OFFSET = -21.4
+  const BOTTOM_X_OFFSET = 13.0
   const BOTTOM_RIGHT_X_NUDGE = 47.0
   const BOTTOM_RIGHT_Z_NUDGE = -58.1
   const TOP_RIGHT_X_NUDGE = 18.0
@@ -244,6 +267,7 @@ export default function Home() {
   const TOP_LEFT_X_NUDGE = 18.0
   const TOP_LEFT_Y_NUDGE = -8.0
   const TOP_LEFT_Z_NUDGE = -29.3
+  const TREAD_Y_NUDGE = 1.5
   const bottomBase = calculatePosition("step", -1, componentSettings, globalArrayMultiplier)
   const bottomAnglePosition: [number, number, number] = [
     bottomBase[0] + (selectedBottomAngle === "left" ? BOTTOM_X_OFFSET : 0) + (selectedBottomAngle === "right" ? BOTTOM_X_OFFSET + BOTTOM_RIGHT_X_NUDGE : 0),
@@ -377,7 +401,11 @@ export default function Home() {
                               modelConfig.components.step1!.defaultTexture ||
                               "dark-cherry-wood"
                             }
-                            position={calculatePosition("step1", i, componentSettings, globalArrayMultiplier)}
+                            position={(
+                              (p => [p[0], p[1] + TREAD_Y_NUDGE, p[2]] as [number, number, number])
+                              (calculatePosition("step1", i, componentSettings, globalArrayMultiplier))
+                            )}
+                            scale={[treadScale, treadScale, treadScale]}
                           />
                         ),
                       )}
@@ -700,6 +728,20 @@ export default function Home() {
                         min={5}
                         max={20}
                         step={0.5}
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <Label>Tread Scale</Label>
+                        <span className="text-sm font-medium text-slate-700">{(treadScale * 100).toFixed(0)}%</span>
+                      </div>
+                      <Slider
+                        value={[treadScale * 100]}
+                        onValueChange={(v) => setTreadScale(v[0] / 100)}
+                        min={50}
+                        max={200}
+                        step={1}
                       />
                     </div>
                   </CardContent>
