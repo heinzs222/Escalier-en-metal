@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/badge"
 import { Settings, Ruler, Palette, ShoppingCart, Download, Share2, Info, Wrench, Upload } from "lucide-react"
 import { useEffect, useState, Suspense } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import * as THREE from "three"
 import { GLTFLoader } from "three-stdlib"
 import { getTextures, type TextureSet } from "@/lib/textures"
@@ -31,6 +32,7 @@ import {
 } from "@/lib/models"
 
 export default function Home() {
+  const router = useRouter()
   const [isInitialized, setIsInitialized] = useState(false)
   const [selectedModelId, setSelectedModelId] = useState<string | null>(null)
   const [modelConfig, setModelConfig] = useState<ModelConfiguration | null>(null)
@@ -49,7 +51,7 @@ export default function Home() {
   const allModels = getAllModels()
 
   useEffect(() => {
-    // Load textures on client side only
+    
     const textures = getTextures()
     setAvailableTextures(textures)
   }, [])
@@ -62,7 +64,7 @@ export default function Home() {
     if (savedConfig) {
       console.log("📂 Found unified configuration:", savedConfig)
 
-      // Validate that the model exists
+      // Validate that the model exist8.9     const modelExists = allModels.some((m) => m.id === savedConfig.modelId)
       const modelExists = allModels.some((m) => m.id === savedConfig.modelId)
       if (modelExists) {
         setSelectedModelId(savedConfig.modelId)
@@ -75,19 +77,21 @@ export default function Home() {
         setSelectedTopAngle(savedConfig.selectedTopAngle || "none")
         console.log("✅ Restored unified configuration")
       } else {
-        console.warn(`⚠️ Saved model "${savedConfig.modelId}" not found, using default`)
-        setSelectedModelId("limon-central-droit-droit")
+        console.warn(`⚠️ Saved model "${savedConfig.modelId}" not found, redirecting to product selection`)
+        router.push("/products")
+        return
       }
     } else {
-      // No saved config, use default
-      setSelectedModelId("limon-central-droit-droit")
+      // No saved config, go to product selection first
+      router.push("/products")
+      return
     }
 
     console.log("✅ Main page ready")
     setIsInitialized(true)
   }, [])
 
-  // Load model configuration when model changes
+  
   useEffect(() => {
     if (!selectedModelId || !isInitialized) return
 
@@ -97,7 +101,7 @@ export default function Home() {
     if (config) {
       setModelConfig(config)
 
-      // Only set defaults if we don't have saved values
+      
       if (Object.keys(componentSettings).length === 0) {
         setComponentSettings(createDefaultComponentSettings(config))
         const textures: Record<string, string> = {}
@@ -182,19 +186,19 @@ export default function Home() {
       const next = { ...prev }
       let changed = false
 
-      // Compute spacing first
+      
       const spacing: [number, number, number] = [
         defaultStepSpacing[0] * FUDGE,
         defaultStepSpacing[1] * FUDGE,
         defaultStepSpacing[2],
       ]
 
-      // Derive total span to place base (anchor) at the start, while keeping the array centered
+      
       const effectiveCount = Math.max(1, getEffectiveCount("step", next.step || ({} as any), globalArrayMultiplier))
       const totalSpanX = spacing[0] * (effectiveCount - 1)
       const baseAnchorX = (defaultStepBase[0] + HORIZONTAL_SHIFT) - totalSpanX / 2
 
-      // Use base as world anchor directly under first step (no GLTF offset here)
+      
       if (next.base) {
         const basePosition: [number, number, number] = [
           baseAnchorX,
@@ -256,7 +260,7 @@ export default function Home() {
   }
 
   const effectiveStepCount = getEffectiveCount("step", componentSettings, globalArrayMultiplier)
-  const ANGLE_Z_OFFSET = 29.2
+  const ANGLE_Z_OFFSET = 29.1
   const BOTTOM_Y_OFFSET = -21.4
   const BOTTOM_X_OFFSET = 13.0
   const BOTTOM_RIGHT_X_NUDGE = 47.0

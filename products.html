@@ -1,0 +1,5471 @@
+<link
+  href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap"
+  rel="stylesheet"
+/>
+<style id="no-anim-overrides">
+  .eem-overlay {
+    display: none !important;
+  }
+  .eem-overlay.eem-active {
+    display: flex !important;
+  }
+
+  .eem-modal {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+
+  .form-modal {
+    display: none !important;
+  }
+  .form-modal.active {
+    display: flex !important;
+  }
+
+  .form-content {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+
+  .eem-overlay.eem-active,
+  .form-modal.active {
+    animation: none !important;
+  }
+</style>
+
+<style>
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    --container: 1240px;
+    --line: #ececec;
+    --muted: #6b7280;
+    --text: #111;
+    --bg: #fff;
+    --chip: #f6f6f7;
+    --radius: 16px;
+    --shadow: 0 24px 60px rgba(0, 0, 0, 0.18);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial,
+      sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.55;
+  }
+  .tab-chev.right,
+  .tab-chev.left {
+    visibility: hidden;
+    opacity: 0;
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+  }
+
+  .faq {
+    background: #f8f8f8;
+  }
+  .faq h2 {
+    font-size: 36px;
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  .faq-container {
+    max-width: 840px;
+    margin: 0 auto;
+  }
+  .faq-item {
+    background: #fff;
+    border: 1px solid #e7e7e7;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .faq-question {
+    padding: 18px 20px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.25s ease, padding 0.25s ease;
+    padding: 0 20px;
+  }
+  .faq-item.active .faq-answer {
+    max-height: 200px;
+    padding: 12px 20px 18px;
+  }
+  .topbar {
+    background: #000;
+    color: #fff;
+    text-align: center;
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    background: #fff;
+    border-bottom: 1px solid var(--line);
+  }
+  .header-inner {
+    max-width: var(--container);
+    margin: 0 auto;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo img {
+    height: 44px;
+  }
+  .btn-config {
+    background: #111;
+    color: #fff;
+    border-radius: 10px;
+    padding: 10px 14px;
+    text-decoration: none;
+    font-weight: 700;
+  }
+  .btn-config:hover {
+    opacity: 0.9;
+  }
+
+  .band {
+    background: #e8dfd3;
+    border-bottom: 1px solid var(--line);
+  }
+  .band-inner {
+    max-width: var(--container);
+    margin: 0 auto;
+    padding: 28px 20px 34px;
+  }
+  .breadcrumb {
+    font-size: 13px;
+    color: #555;
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .breadcrumb a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .page-title {
+    font-size: 52px;
+    margin: 0;
+  }
+
+  .controls {
+    max-width: var(--container);
+    margin: 16px auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .count {
+    color: #71717a;
+    font-size: 14px;
+  }
+  .controls-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .search input {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 10px 12px;
+    min-width: 220px;
+  }
+  .sort {
+    position: relative;
+  }
+  .sort select {
+    appearance: none;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 10px 38px 10px 12px;
+    background: #fff;
+  }
+  .sort:after {
+    content: "▾";
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    color: #666;
+  }
+
+  .layout {
+    max-width: var(--container);
+    margin: 0 auto;
+    padding: 0 20px 80px;
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 28px;
+  }
+  @media (max-width: 1024px) {
+    .layout {
+      grid-template-columns: 1fr;
+    }
+    .sidebar {
+      order: -1;
+    }
+  }
+  .sidebar {
+    position: sticky;
+    top: 74px;
+    align-self: start;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 18px;
+    background: #fff;
+    z-index: 99999;
+  }
+  .filter-title {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  .chipset {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .chip {
+    background: var(--chip);
+    border: 1px solid #e4e4e7;
+    border-radius: 999px;
+    padding: 7px 10px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .chip.active,
+  .chip:hover {
+    background: #111;
+    color: #fff;
+    border-color: #111;
+  }
+  .range {
+    display: grid;
+    gap: 8px;
+  }
+  .range input[type="range"] {
+    width: 100%;
+  }
+  .labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #737373;
+  }
+  .clear-btn {
+    background: none;
+    border: none;
+    color: #444;
+    text-decoration: underline;
+    font-size: 13px;
+    cursor: pointer;
+    margin-top: 6px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 26px;
+  }
+  @media (max-width: 1024px) {
+    .grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 640px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .card {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: #fff;
+    cursor: pointer;
+    transform: translateY(18px);
+    opacity: 0;
+    transition: 0.35s;
+  }
+  .card.reveal {
+    transform: none;
+    opacity: 1;
+  }
+  .card:hover {
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.1);
+    border-color: #ddd;
+  }
+  .media {
+    position: relative;
+    aspect-ratio: 4/3;
+    background: linear-gradient(180deg, #fafafa, #f1f1f1);
+  }
+  .media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .swatches {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    display: flex;
+    gap: 8px;
+  }
+  .swatch {
+    width: 16px;
+    height: 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    outline: 2px solid rgba(255, 255, 255, 0.9);
+  }
+  .content {
+    padding: 14px 14px 16px;
+  }
+  .name {
+    font-weight: 600;
+    margin-bottom: 6px;
+    font-size: 15px;
+  }
+  .price {
+    font-size: 14px;
+  }
+  .price .from {
+    color: #6b7280;
+    margin-right: 6px;
+    font-size: 11px;
+    letter-spacing: 0.3px;
+  }
+
+  .eem-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(2px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 100001;
+    max-width: 100dvw;
+  }
+  .eem-overlay.eem-active {
+    display: flex !important;
+    animation: eemFade 0.2s;
+  }
+  .eem-modal {
+    width: min(1120px, 100%);
+    background: #fff;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+    transform: translateY(40px);
+    opacity: 0;
+    animation: eemRise 0.28s forwards;
+  }
+  .eem-modal-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+  }
+  @media (max-width: 900px) {
+    .eem-modal-grid {
+      max-height: 85dvh;
+      overflow-y: scroll;
+      grid-template-columns: 1fr;
+    }
+  }
+  .eem-modal-head {
+    position: relative;
+  }
+  .eem-modal-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+  }
+
+  .gallery {
+    padding: 16px;
+  }
+  .gallery-main {
+    aspect-ratio: 4/3;
+    background: #f4f4f5;
+    border-radius: 14px;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    margin-bottom: 12px;
+  }
+  .gallery-main img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    overflow: hidden;
+  }
+  .thumbs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .thumb {
+    aspect-ratio: 4/3;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #f0f0f0;
+    border: 2px solid transparent;
+    cursor: pointer;
+  }
+  .thumb.active {
+    border-color: #111;
+  }
+  .thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .pdetails {
+    padding: 22px 20px 24px;
+  }
+  .modal-title {
+    font-size: 26px;
+    margin: 0 0 6px;
+  }
+  .modal-price {
+    font-size: 18px;
+    margin: 8px 0 14px;
+  }
+  .opt-row {
+    display: grid;
+    gap: 10px;
+    margin: 10px 0 10px;
+  }
+  .opt-row select {
+    appearance: none;
+    border: 1px solid #ececec;
+    border-radius: 10px;
+    padding: 10px 12px;
+    background: #fff;
+  }
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    background: #111;
+    color: #fff;
+    border: 1px solid #111;
+    font-weight: 800;
+    cursor: pointer;
+    width: 100%;
+  }
+  .btn-primary:hover {
+    opacity: 0.92;
+  }
+  .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: #fff;
+    border: 1px solid #d4d4d8;
+    color: #111;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .callout {
+    border: 1px dashed #e5e7eb;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    font-weight: 800;
+    font-size: 22px;
+    text-align: center;
+  }
+  .btn-block {
+    width: 100%;
+    margin-top: 10px;
+  }
+  .tabs {
+    margin-top: 14px;
+  }
+  .tab-head {
+    display: flex;
+    gap: 12px;
+    border-bottom: 1px solid #ececec;
+  }
+
+  .tab-head {
+    position: relative;
+  }
+  .tab-head::before,
+  .tab-head::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 28px;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    opacity: 0;
+  }
+  .tab-head::before {
+    left: 0;
+    background: linear-gradient(to right, #fff, rgba(255, 255, 255, 0));
+  }
+  .tab-head::after {
+    right: 0;
+    background: linear-gradient(to left, #fff, rgba(255, 255, 255, 0));
+  }
+  .tab-head.has-left::before {
+    opacity: 1;
+  }
+  .tab-head.has-right::after {
+    opacity: 1;
+  }
+
+  .tab-chev {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    background: #fff;
+    border: 1px solid #e4e4e7;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+    z-index: 1;
+  }
+  .tab-chev[hidden] {
+    display: none !important;
+  }
+  .tab-chev.left {
+    left: 6px;
+  }
+  .tab-chev.right {
+    right: 6px;
+    top: 8px;
+  }
+
+  .tab-swipe-hint {
+    position: absolute;
+    right: 10px;
+    bottom: 6px;
+    font-size: 12px;
+    line-height: 1;
+    background: #111;
+    color: #fff;
+    padding: 6px 8px;
+    border-radius: 999px;
+    opacity: 0.92;
+    pointer-events: none;
+    animation: hintFade 2.4s 0.4s forwards;
+  }
+  @keyframes hintFade {
+    0%,
+    85% {
+      opacity: 0.92;
+    }
+    100% {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .tab-head {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-x: contain;
+
+      gap: 12px;
+      padding: 8px 8px 0;
+
+      scroll-snap-type: x proximity;
+
+      scrollbar-width: none;
+      position: relative;
+    }
+    .tab-head::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tab-head .tab-btn {
+      flex: 0 0 auto;
+      white-space: nowrap;
+      scroll-snap-align: center;
+    }
+  }
+
+  .tab-btn {
+    background: none;
+    border: none;
+    padding: 10px 6px;
+    font-weight: 700;
+    color: #52525b;
+    cursor: pointer;
+  }
+  .tab-btn.active {
+    color: #111;
+    border-bottom: 2px solid #111;
+  }
+  .tab-body {
+    padding: 12px 0;
+    color: #333;
+    max-height: 260px;
+    overflow: auto;
+  }
+
+  @keyframes eemFade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes eemRise {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  body.modal-open {
+    overflow: hidden;
+    overscroll-behavior: contain;
+  }
+
+  .form-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(3px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 100002;
+  }
+  .form-modal.active {
+    display: flex !important;
+    animation: eemFade 0.25s;
+  }
+  .form-content {
+    background: #fff;
+    border-radius: 20px;
+    max-width: 800px;
+    width: 100%;
+    max-height: 90vh;
+    overflow: auto;
+    position: relative;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+    animation: eemRise 0.3s forwards;
+  }
+  .form-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 10;
+  }
+  .form-close:hover {
+    background: #000;
+  }
+  .form-iframe {
+    width: 100%;
+    min-height: 600px;
+    border: none;
+    border-radius: 20px;
+  }
+
+  footer {
+    background: #000;
+    color: #fff;
+    padding: 36px 5%;
+    text-align: center;
+  }
+  footer p {
+    opacity: 0.9;
+    font-size: 14px;
+  }
+</style>
+
+<div class="topbar">100% Fait à la main au Québec</div>
+<header>
+  <div class="header-inner">
+    <a class="logo" href="/"
+      ><img
+        src="https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68781e6ac00dfc2c816b056e.png"
+        alt="Escaliers En Métal"
+    /></a>
+    <a class="btn-config" href="#">Obtenir un devis</a>
+  </div>
+</header>
+
+<section class="band">
+  <div class="band-inner">
+    <nav class="breadcrumb">
+      <a href="/">Accueil</a><span>›</span
+      ><span aria-current="page">Escaliers</span>
+    </nav>
+    <h1 class="page-title">ESCALIERS</h1>
+  </div>
+</section>
+
+<div class="controls">
+  <div class="count" id="count">0 produits</div>
+  <div class="controls-right">
+    <div class="search">
+      <input id="searchInput" type="text" placeholder="Rechercher…" />
+    </div>
+    <div class="sort">
+      <select id="sortSelect">
+        <option value="popular">Trier par</option>
+        <option value="price-asc">Prix croissant</option>
+        <option value="price-desc">Prix décroissant</option>
+        <option value="name-asc">Nom (A→Z)</option>
+        <option value="name-desc">Nom (Z→A)</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<main class="layout">
+  <aside class="sidebar" aria-label="Filtres">
+    <h3 class="filter-title">Filtres</h3>
+    <div style="font-weight: 600; margin-bottom: 8px">Catégorie</div>
+    <div id="categoryChips" class="chipset"></div>
+    <button class="clear-btn" id="clearCategory" type="button">Effacer</button>
+
+    <div style="height: 12px"></div>
+
+    <div style="font-weight: 600; margin-bottom: 8px">Prix maximum</div>
+    <div class="range">
+      <input
+        type="range"
+        min="0"
+        max="10000"
+        step="10"
+        value="10000"
+        id="maxPrice"
+      />
+      <div class="labels">
+        <span>$0</span><span id="maxLabel">$10,000</span>
+      </div>
+    </div>
+
+    <button class="clear-btn" id="clearAll" type="button">
+      Réinitialiser tous les filtres
+    </button>
+  </aside>
+
+  <section class="grid" id="grid" aria-live="polite"></section>
+</main>
+
+<div
+  class="eem-overlay"
+  id="eemOverlay"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="modalTitle"
+>
+  <div class="eem-modal" id="eemModalRoot" role="document">
+    <div class="eem-modal-head">
+      <button class="eem-modal-close" id="modalClose" aria-label="Fermer">
+        ×
+      </button>
+    </div>
+    <div class="eem-modal-grid">
+      <div class="gallery">
+        <div class="gallery-main"><img id="mMain" alt="" /></div>
+        <div class="thumbs" id="mThumbs"></div>
+      </div>
+      <div class="pdetails">
+        <h2 class="modal-title" id="modalTitle">Produit</h2>
+        <div class="modal-price" id="modalPrice"></div>
+
+        <div class="opt-row">
+          <label style="font-size: 12px; color: #6b7280">Options</label>
+          <select id="optionSelect"></select>
+        </div>
+
+        <button type="button" class="btn-primary" id="quoteBtn">
+          Obtenir un devis
+        </button>
+
+        <div class="callout" id="phoneBlock">
+          <a id="callBtn">Appelez-nous maintenant</a>
+          <a class="btn-outline btn-block" href="tel:+14388014355"
+            >438-801-4355</a
+          >
+        </div>
+
+        <div class="tabs">
+          <div class="tab-head">
+            <button class="tab-btn active" data-tab="desc">Description</button>
+            <button class="tab-btn" data-tab="details">
+              Spécifications Techniques
+            </button>
+            <button class="tab-btn" data-tab="finis">Finis</button>
+            <button class="tab-btn" data-tab="faqs">FAQs</button>
+          </div>
+          <div class="tab-body" id="tabBody"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="form-modal" id="formModal">
+  <div class="form-content">
+    <button class="form-close" id="formClose" aria-label="Fermer">×</button>
+    <iframe
+      src="https://api.leadconnectorhq.com/widget/survey/nooTWOXjgFfnOWm8GBkR"
+      class="form-iframe"
+      scrolling="no"
+      id="nooTWOXjgFfnOWm8GBkR"
+      title="survey"
+    ></iframe>
+  </div>
+</div>
+
+<footer id="contact">
+  <p>
+    © 2025 Escaliers En Métal. Tous droits réservés. | Email:
+    info@escaliersenmetal.com | Téléphone:
+    <a href="tel:+14388014355">438-801-4355</a>
+  </p>
+</footer>
+
+<script src="https://link.msgsndr.com/js/form_embed.js"></script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const head = document.querySelector(".tab-head");
+    if (head) {
+      head.setAttribute("role", "tablist");
+      head.setAttribute("aria-orientation", "horizontal");
+      document.querySelectorAll(".tab-head .tab-btn").forEach((b, i) => {
+        b.setAttribute("role", "tab");
+        if (!b.id) b.id = "tab-" + i;
+      });
+
+      head.insertAdjacentHTML(
+        "beforeend",
+        `
+    <button type="button" class="tab-chev left"  aria-label="Faire défiler vers la gauche">‹</button>
+    <button type="button" class="tab-chev right" aria-label="Faire défiler vers la droite">›</button>
+    <div class="tab-swipe-hint" id="tabSwipeHint" style="display:none">Balayez →</div>
+  `
+      );
+      const chevL = head.querySelector(".tab-chev.left");
+      const chevR = head.querySelector(".tab-chev.right");
+      const hint = head.querySelector("#tabSwipeHint");
+
+      const hasOverflow = (el) => el.scrollWidth - el.clientWidth > 1;
+
+      function updateAffordances() {
+        const max = head.scrollWidth - head.clientWidth - 1;
+        const sc = head.scrollLeft;
+        head.classList.toggle("has-left", sc > 0);
+        head.classList.toggle("has-right", sc < max);
+        chevL.hidden = sc <= 0;
+        chevR.hidden = sc >= max;
+      }
+
+      function maybeShowHintOnce() {
+        try {
+          if (hasOverflow(head) && !localStorage.getItem("tabsHintSeen")) {
+            hint.style.display = "block";
+
+            const hide = () => {
+              hint.style.display = "none";
+              localStorage.setItem("tabsHintSeen", "1");
+              head.removeEventListener("scroll", hide);
+              head.removeEventListener("pointerdown", hide);
+            };
+            head.addEventListener("scroll", hide, { once: true });
+            head.addEventListener("pointerdown", hide, { once: true });
+          }
+        } catch (_) {}
+      }
+
+      const scrollAmount = () =>
+        Math.max(120, Math.floor(head.clientWidth * 0.7));
+      chevL.addEventListener("click", () =>
+        head.scrollBy({ left: -scrollAmount(), behavior: "smooth" })
+      );
+      chevR.addEventListener("click", () =>
+        head.scrollBy({ left: scrollAmount(), behavior: "smooth" })
+      );
+
+      head.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowRight") {
+          head.scrollBy({ left: 100, behavior: "smooth" });
+        }
+        if (e.key === "ArrowLeft") {
+          head.scrollBy({ left: -100, behavior: "smooth" });
+        }
+      });
+
+      head.addEventListener("scroll", updateAffordances, { passive: true });
+      window.addEventListener("resize", () => {
+        updateAffordances();
+        maybeShowHintOnce();
+      });
+
+      const ro = new ResizeObserver(() => {
+        updateAffordances();
+        maybeShowHintOnce();
+      });
+      ro.observe(head);
+
+      const overlay = document.getElementById("eemOverlay");
+      if (overlay) {
+        const mo = new MutationObserver(() => {
+          if (overlay.classList.contains("eem-active")) {
+            requestAnimationFrame(() => {
+              updateAffordances();
+              maybeShowHintOnce();
+            });
+          }
+        });
+        mo.observe(overlay, { attributes: true, attributeFilter: ["class"] });
+      }
+
+      updateAffordances();
+      maybeShowHintOnce();
+    }
+
+    const $ = (s, el = document) => el.querySelector(s);
+    const $$ = (s, el = document) => Array.from(el.querySelectorAll(s));
+
+    const COLOR_LABELS = { "#000": "Noir", "#fff": "Blanc" };
+    const colorLabel = (c) => COLOR_LABELS[(c || "").toLowerCase()] ?? c;
+
+    const VISIBLE_COLORS = ["#000", "#fff"];
+    const normalizedColorsFor = (p) =>
+      (p.category || "").toLowerCase() === "marches" ? [] : VISIBLE_COLORS;
+
+    const fmt = (n) =>
+      new Intl.NumberFormat("fr-CA", {
+        style: "currency",
+        currency: "CAD",
+      }).format(n);
+
+    const PRICE_MATRIX = {
+      p1: {
+        2: 1455,
+        3: 1696,
+        4: 1955,
+        5: 2156,
+        6: 2415,
+        7: 2760,
+        8: 3105,
+        9: 3508,
+        10: 3853,
+        11: 4255,
+        12: 4658,
+        13: 5060,
+        14: 5410,
+        15: 5760,
+        16: 6110,
+        17: 6460,
+        18: 6810,
+        19: 7160,
+        20: 7510,
+      },
+
+      p2: {
+        3: 980,
+        4: 1210,
+        5: 1323,
+        6: 1553,
+        7: 1725,
+        8: 2070,
+        9: 2415,
+        10: 2645,
+        11: 2990,
+        12: 3335,
+        13: 3738,
+        14: 4025,
+        15: 4375,
+        16: 4725,
+        17: 5075,
+        18: 5425,
+        19: 5775,
+        20: 6125,
+      },
+
+      p3: {
+        2: 1265,
+        3: 1475,
+        4: 1700,
+        5: 1875,
+        6: 2100,
+        7: 2400,
+        8: 2700,
+        9: 3050,
+        10: 3350,
+        11: 3700,
+        12: 4050,
+        13: 4400,
+        14: 4750,
+        15: 5100,
+        16: 5450,
+        17: 5800,
+        18: 6150,
+        19: 6500,
+        20: 6850,
+      },
+
+      p4: {
+        2: 850,
+        3: 1050,
+        4: 1150,
+        5: 1350,
+        6: 1500,
+        7: 1800,
+        8: 2100,
+        9: 2300,
+        10: 2600,
+        11: 2900,
+        12: 3250,
+        13: 3500,
+        14: 3850,
+        15: 4200,
+        16: 4550,
+        17: 4900,
+        18: 5250,
+        19: 5600,
+        20: 5950,
+      },
+
+      p5: {
+        2: 1025,
+        3: 1150,
+        4: 1275,
+        5: 1475,
+        6: 1675,
+        7: 1875,
+        8: 2075,
+        9: 2550,
+        10: 2750,
+        11: 2950,
+        12: 3150,
+        13: 3350,
+      },
+
+      p6: {
+        2: 750,
+        3: 875,
+        4: 1000,
+        5: 1200,
+        6: 1400,
+        7: 1600,
+        8: 1800,
+        9: 2000,
+        10: 2200,
+        11: 2400,
+        12: 2600,
+        13: 2800,
+      },
+
+      p7: {
+        2: 750,
+        3: 875,
+        4: 1000,
+        5: 1200,
+        6: 1400,
+        7: 1600,
+        8: 1800,
+        9: 2000,
+        10: 2200,
+        11: 2400,
+        12: 2600,
+        13: 2800,
+      },
+    };
+
+    const enjLabel = (n) => `${n} marches (${n + 1} enjambées)`;
+
+    function populateOptionsForProduct(p) {
+      const select = document.getElementById("optionSelect");
+      const priceEl = document.getElementById("modalPrice");
+      select.innerHTML = "";
+
+      const matrix = PRICE_MATRIX[p.id];
+
+      if (matrix) {
+        const keys = Object.keys(matrix)
+          .map(Number)
+          .sort((a, b) => a - b);
+
+        for (const k of keys) {
+          const opt = document.createElement("option");
+          opt.value = String(k);
+          opt.textContent = enjLabel(k);
+          select.appendChild(opt);
+        }
+
+        if (keys.length) {
+          select.value = String(keys[0]);
+          const price = getDynamicPrice(p, Number(select.value));
+          priceEl.textContent = fmt(price);
+        }
+
+        select.onchange = () => {
+          const qty = Number(select.value);
+          priceEl.textContent = fmt(getDynamicPrice(p, qty));
+        };
+
+        return;
+      }
+
+      if (Array.isArray(p.options) && p.options.length) {
+        for (const label of p.options) {
+          const opt = document.createElement("option");
+          opt.value = label;
+          opt.textContent = label;
+          select.appendChild(opt);
+        }
+      } else {
+        const opt = document.createElement("option");
+        opt.value = "default";
+        opt.textContent = "Option par défaut";
+        select.appendChild(opt);
+      }
+
+      priceEl.textContent = fmt(getStartPrice(p));
+    }
+
+    const RAMPES_MATERIALS = {
+      metal_1x3: "Métal - 1x3 HSS",
+      metal_1_5sq: 'Métal 1-1/2" x 1-1/2" HSS',
+      bois_chene_blanc: "Bois - Chêne Blanc",
+      bois_chene_rouge: "Bois- Chêne Rouge",
+      bois_frene: "Bois - Frêne",
+      bois_erable_sucre: "Bois - Érable à Sucre",
+      bois_erable_ambrosia: "Bois - Érable Ambrosia",
+      bois_merisier: "Bois - Merisier",
+      bois_noyer_noir: "Bois - Noyer Noir",
+    };
+    const materialKeys = Object.keys(RAMPES_MATERIALS);
+    const isMetalKey = (k) => k === "metal_1x3" || k === "metal_1_5sq";
+
+    const PROFILE_MAP = {
+      'Tube rond 1½"': "metal_1x3",
+      'Tube carré 1½"': "metal_1_5sq",
+      'Flat bar 2" x ¼"': "metal_1x3",
+    };
+
+    const THICKNESS_KEYS = ["1_1_16", "1_3_4", "2", "2_1_2", "3"];
+    const THICKNESS_LABELS = {
+      "1_1_16": '1-1/16"',
+      "1_3_4": '1-3/4"',
+      2: '2"',
+      "2_1_2": '2-1/2"',
+      3: '3"',
+    };
+
+    const MARCHES_UNIT_PRICE = {
+      p8: { "1_1_16": 93, "1_3_4": 107, 2: 127, "2_1_2": 146, 3: 176 },
+
+      p8b: { "1_1_16": 93, "1_3_4": 107, 2: 127, "2_1_2": 146, 3: 166 },
+
+      p8c: { "1_1_16": 122, "1_3_4": 176, 2: 215, "2_1_2": 244, 3: 271 },
+
+      p8d: { "1_1_16": 93, "1_3_4": 107, 2: 127, "2_1_2": 146, 3: 176 },
+
+      p8e: { "1_1_16": 93, "1_3_4": 107, 2: 127, "2_1_2": 146, 3: 176 },
+    };
+
+    const RAMPES_PRICES = {
+      p9: {
+        metal_1x3: 200,
+        metal_1_5sq: 200,
+        bois_chene_blanc: 245,
+        bois_chene_rouge: 230,
+        bois_frene: 230,
+        bois_erable_sucre: 230,
+        bois_erable_ambrosia: 230,
+        bois_merisier: 230,
+        bois_noyer_noir: 255,
+      },
+
+      p10: {
+        metal_1x3: 230,
+        metal_1_5sq: 230,
+        bois_chene_blanc: 275,
+        bois_chene_rouge: 260,
+        bois_frene: 260,
+        bois_erable_sucre: 250,
+        bois_erable_ambrosia: 260,
+        bois_merisier: 260,
+        bois_noyer_noir: 285,
+      },
+
+      p11: {
+        metal_1x3: 395,
+        metal_1_5sq: 395,
+        bois_chene_blanc: 440,
+        bois_chene_rouge: 425,
+        bois_frene: 425,
+        bois_erable_sucre: 415,
+        bois_erable_ambrosia: 425,
+        bois_merisier: 425,
+        bois_noyer_noir: 440,
+      },
+
+      p12: {
+        metal_1x3: 320,
+        metal_1_5sq: 320,
+        bois_chene_blanc: 365,
+        bois_chene_rouge: 350,
+        bois_frene: 350,
+        bois_erable_sucre: 340,
+        bois_erable_ambrosia: 350,
+        bois_merisier: 350,
+        bois_noyer_noir: 365,
+      },
+    };
+    const MAIN_COURANTE_ONLY = {
+      p13: {
+        metal_1x3: 60,
+        metal_1_5sq: 60,
+        bois_chene_blanc: 90,
+        bois_chene_rouge: 85,
+        bois_frene: 85,
+        bois_erable_sucre: 85,
+        bois_erable_ambrosia: 85,
+        bois_merisier: 85,
+        bois_noyer_noir: 95,
+      },
+      p14: {
+        metal_1x3: 60,
+        metal_1_5sq: 60,
+        bois_chene_blanc: 90,
+        bois_chene_rouge: 85,
+        bois_frene: 85,
+        bois_erable_sucre: 85,
+        bois_erable_ambrosia: 85,
+        bois_merisier: 85,
+        bois_noyer_noir: 95,
+      },
+    };
+
+    // Glass guard rail prices
+    const GARDE_CORPS_VERRE = {
+      sans_main_courante: 210, // Garde-Corps - Verre (Aucune main courante)
+      avec_main_courante_acier: {
+        metal_1x3: 235,
+        metal_1_5sq: 235,
+      },
+      avec_main_courante_bois: {
+        bois_chene_blanc: 275,
+        bois_chene_rouge: 260,
+        bois_frene: 260,
+        bois_erable_sucre: 250,
+        bois_erable_ambrosia: 260,
+        bois_merisier: 260,
+        bois_noyer_noir: 285,
+      },
+    };
+
+    const METAL_QUALITY = {
+      acier: { label: "Acier (100%)", factor: 1.0 },
+      inox: { label: "Stainless Steel (200%)", factor: 2.0 },
+    };
+
+    const PEINTURE_ADD = {
+      noir: { label: "Noir (standard)", add: 0 },
+      blanc: { label: "Blanc (+15$/pi)", add: 15 },
+      custom: { label: "Couleur personnalisée (+30$/pi)", add: 30 },
+    };
+
+    const FINITION_BOIS_ADD = {
+      brute: { label: "Brute (+0$/pi)", add: 0 },
+      prete: { label: "Prête à teindre (+3,50$/pi)", add: 3.5 },
+      laque: { label: "Laque polyuréthane (mat) (+7,35$/pi)", add: 7.35 },
+      color_match: {
+        label: "Color match + laque (mat) (+36,75$/pi)",
+        add: 36.75,
+      },
+      huile: { label: "Huilé (mat) (+7,35$/pi)", add: 7.35 },
+    };
+
+    const WHITE_COLOR_MULTIPLIER = 1.25;
+
+    function getDynamicPrice(p, qtyOrMarches, ctx = {}) {
+      const pid = p.id;
+      const m = Number(qtyOrMarches);
+      const table = PRICE_MATRIX[pid];
+
+      const selectedColor = STATE.selectedColors[p.id];
+      const isWhite = selectedColor && selectedColor.toLowerCase() === "#fff";
+      const colorMultiplier = isWhite ? WHITE_COLOR_MULTIPLIER : 1;
+
+      if (table) {
+        if (table[m] != null) return table[m] * colorMultiplier;
+        const keys = Object.keys(table)
+          .map(Number)
+          .sort((a, b) => a - b);
+        if (m <= keys[0]) return table[keys[0]] * colorMultiplier;
+        const last = keys[keys.length - 1],
+          prev = keys[keys.length - 2];
+        const step = table[last] - table[prev];
+        return (table[last] + step * (m - last)) * colorMultiplier;
+      }
+
+      if (p.unit === "/marche") {
+        const qty = Math.max(1, isFinite(m) ? Number(m) : 1);
+        const tKey = (ctx && ctx.thicknessKey) || "1_1_16";
+        const table = MARCHES_UNIT_PRICE[p.id];
+        const perStep = table?.[tKey];
+        const unitPrice = isFinite(perStep) ? perStep : p.base_price || 0;
+        return unitPrice * qty * colorMultiplier;
+      }
+
+      if (p.unit === "/pied linéaire") {
+        const len = Math.max(1, isFinite(m) ? m : 1);
+
+        let basePerFt = null;
+        if (RAMPES_PRICES[pid]) {
+          basePerFt = RAMPES_PRICES[pid][ctx.materialKey];
+        } else if (MAIN_COURANTE_ONLY[pid]) {
+          basePerFt = MAIN_COURANTE_ONLY[pid][ctx.materialKey];
+        }
+        if (!isFinite(basePerFt)) basePerFt = p.base_price || 0;
+
+        let perFt = basePerFt;
+
+        if (isMetalKey(ctx.materialKey)) {
+          const qual = METAL_QUALITY[ctx.metalQual || "acier"]?.factor ?? 1.0;
+          perFt *= qual;
+          const paintAdd = PEINTURE_ADD[ctx.paint || "noir"]?.add ?? 0;
+          perFt += paintAdd;
+        } else {
+          const add = FINITION_BOIS_ADD[ctx.woodFinish || "brute"]?.add ?? 0;
+          perFt += add;
+        }
+        return perFt * len * colorMultiplier;
+      }
+
+      return (p.base_price || 0) * colorMultiplier;
+    }
+
+    function getStartPrice(p) {
+      const table = PRICE_MATRIX[p.id];
+
+      const selectedColor = STATE.selectedColors[p.id];
+      const isWhite = selectedColor && selectedColor.toLowerCase() === "#fff";
+      const colorMultiplier = isWhite ? WHITE_COLOR_MULTIPLIER : 1;
+
+      if (table) {
+        let min = Infinity;
+        for (const v of Object.values(table)) if (v < min) min = v;
+        return (isFinite(min) ? min : p.base_price || 0) * colorMultiplier;
+      }
+
+      if (p.unit === "/marche") {
+        const t = MARCHES_UNIT_PRICE[p.id];
+        if (t) {
+          return (
+            Math.min(...Object.values(t).filter((v) => isFinite(v))) *
+            colorMultiplier
+          );
+        }
+        return (p.base_price || 0) * colorMultiplier;
+      }
+
+      if (p.unit === "/pied linéaire") {
+        let candidates = [];
+
+        if (RAMPES_PRICES[p.id]) {
+          for (const [k, base] of Object.entries(RAMPES_PRICES[p.id])) {
+            let per = base;
+            if (k === "metal_1x3" || k === "metal_1_5sq") {
+              per *= METAL_QUALITY.acier.factor;
+              per += PEINTURE_ADD.noir.add;
+            } else {
+              per += FINITION_BOIS_ADD.brute.add;
+            }
+            candidates.push(per);
+          }
+        }
+        if (MAIN_COURANTE_ONLY[p.id]) {
+          for (const [k, base] of Object.entries(MAIN_COURANTE_ONLY[p.id])) {
+            let per = base;
+            if (k === "metal_1x3" || k === "metal_1_5sq") {
+              per *= METAL_QUALITY.acier.factor;
+              per += PEINTURE_ADD.noir.add;
+            } else {
+              per += FINITION_BOIS_ADD.brute.add;
+            }
+            candidates.push(per);
+          }
+        }
+
+        if (candidates.length) {
+          return Math.min(...candidates) * colorMultiplier;
+        }
+        return (p.base_price || 0) * colorMultiplier;
+      }
+
+      return (p.base_price || 0) * colorMultiplier;
+    }
+    function getStartPrice(p) {
+      const table = PRICE_MATRIX[p.id];
+      if (table) {
+        let min = Infinity;
+        for (const v of Object.values(table)) if (v < min) min = v;
+        return isFinite(min) ? min : p.base_price || 0;
+      }
+
+      if (p.unit === "/marche") {
+        const t = MARCHES_UNIT_PRICE[p.id];
+        if (t) {
+          return Math.min(...Object.values(t).filter((v) => isFinite(v)));
+        }
+        return p.base_price || 0;
+      }
+
+      if (p.unit === "/pied linéaire") {
+        let candidates = [];
+
+        if (RAMPES_PRICES[p.id]) {
+          for (const [k, base] of Object.entries(RAMPES_PRICES[p.id])) {
+            let per = base;
+            if (k === "metal_1x3" || k === "metal_1_5sq") {
+              per *= METAL_QUALITY.acier.factor;
+              per += PEINTURE_ADD.noir.add;
+            } else {
+              per += FINITION_BOIS_ADD.brute.add;
+            }
+            candidates.push(per);
+          }
+        }
+        if (MAIN_COURANTE_ONLY[p.id]) {
+          for (const [k, base] of Object.entries(MAIN_COURANTE_ONLY[p.id])) {
+            let per = base;
+            if (k === "metal_1x3" || k === "metal_1_5sq") {
+              per *= METAL_QUALITY.acier.factor;
+              per += PEINTURE_ADD.noir.add;
+            } else {
+              per += FINITION_BOIS_ADD.brute.add;
+            }
+            candidates.push(per);
+          }
+        }
+
+        if (candidates.length) {
+          return Math.min(...candidates);
+        }
+        return p.base_price || 0;
+      }
+
+      return p.base_price || 0;
+    }
+
+    const PRODUCTS = [
+      {
+        id: "p1",
+        name: "Limon central - Tube 45 degrés",
+        category: "Limon central",
+        base_price: 1115,
+        colors: ["#000", "#f2e2c2"],
+        image:
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68afc2f80c1c5c6b2bf6a852.webp",
+        images: [
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68afc2f80c1c5c6b2bf6a852.webp",
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68afc2f82c36679195be6f88.webp",
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68afc2f80c1c5c5121f6a850.webp",
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68afc2f80c1c5c182ef6a851.webp",
+        ],
+        options: [
+          "1 marche (2 enjambées)",
+          "2 marches (3 enjambées)",
+          "3 marches (4 enjambées)",
+          "4 marches (5 enjambées)",
+          "5 marches (6 enjambées)",
+        ],
+
+        desc: `
+ <strong>Description</strong>
+  <ul>
+    <li>Limon central avec tubes de support à 45° sans soudure apparente, pour un look contemporain unique.</li>
+    <li>Peinture époxy industrielle mate de haute qualité résistante à l'usure</li>
+    <li>Idéal pour espaces modernes, minimalistes, industriels , classiques et plus!</li>
+  </ul>
+  <strong>Services offers</strong>
+  <ul>
+    <li>Prise de mesure et consultation gratuite en personne</li>
+    <li>Livraison possible partout au Québec</li>
+    <li>Installation : Nous faisons affaire avec des sous-contractants pour l'installation. Nous pouvons aussi vous référer à un entrepreneur de votre région.</li>
+  </ul>
+  <strong>Calcul des enjambées</strong>
+  <ul>
+    <li>Nombre de pas entre étages = nombre de marches + 1</li>
+    <li>Exemple : 14 marches = 15 enjambées</li>
+  </ul>
+  <strong>Note :</strong> Toute modification apportée au plan sera facturée au tarif de 125$ de l'heure pour la conception.
+  `,
+
+        details: `
+  <ul>
+    <li><strong>Limon central</strong> : limon en tube d’acier 6"x4", acier structurel ¼" ou 3/16” (selon l’application)</li>
+    <li><strong>Giron standard</strong> : 10"</li>
+    <li><strong>Limon central</strong> : peut supporter des marches jusqu’à 48” de large.</li>
+    <li><strong>Épaisseur des marches</strong> : conçu pour des marches d’un minimum de 1-¾” d’épaisseur</li>
+    <li><strong>Plaques d'ancrage</strong> : Acier structurel ¼". Ancrage dissimulé sous plancher/gypse disponible sur demande</li>
+    <li><strong>Plaques de support de marche</strong> : Acier ¼", 16"x8", fraisées</li>
+    <li><strong>Options d'ancrage</strong> : apparent OU dissimulé</li>
+    <li><strong>Construction</strong> : Acier de qualité supérieure avec soudures professionnelles</li>
+  </ul>`,
+        finis: ` 
+
+  <strong>Éléments de Bois</strong><br>
+  <ul>
+  <li><strong>Brut</strong> : Bois nu sans finition, coupé aux dimensions.</li>
+
+
+  <li><strong>Prêt à teindre</strong> : Bois nu sans finition, coupé aux dimensions, sablé, avec coins arrondis 1/8".</li>
+
+
+  <li><strong>Laqué</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", application d’une laque (mat ou satiné) sur bois naturel.</li>
+
+
+  <li><strong>Teint (Color Match) + Laqué</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", bois teint (selon échantillon client) puis recouvert d’une laque claire (mat ou satiné).</li>
+
+
+  <li><strong>Huilé</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", finition huile claire mate sur bois naturel.</li>
+
+
+  </ul>
+  <strong>Éléments en Acier</strong> 
+  <ul><li><strong>Noir mat / Blanc mat</strong> : Peinture industrielle catalysée (mat ou satiné), appliquée au pistolet.</li></ul>
+  `,
+        faqs: `<section class="faq" id="faq">
+  <h2>FAQ</h2>
+  <div class="faq-container">
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Quel est le délai moyen de fabrication ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          4 à 6 semaines après validation du design et réception de l'acompte.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Livrez-vous partout au Québec ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          Oui, dans toute la province. Des frais peuvent s'appliquer selon la
+          région.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Proposez-vous l'installation ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>Oui, installation professionnelle par notre équipe certifiée.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Quel entretien pour un escalier métal‑bois ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          Entretien minimal : dépoussiérage pour le métal, traitement annuel
+          pour le bois.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Faites-vous la prise de mesures ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          <strong>Oui et non.</strong>
+
+          <br /><br />Notre vocation est celle de manufacturier de composantes
+          exclusivement. Ceci dit, nous pouvons référer un entrepreneur pour
+          faire le relevé des mesures nécessaires à la production de nos plans
+          de fabrication lorsque le projet est relativement simple et à une
+          distance raisonnable.
+
+          <br /><br />L’exactitude des mesures pour la fabrication reste
+          toutefois sous la responsabilité du client et/ou de son entrepreneur
+          et/ou de l’installateur. Nos plans de fabrication doivent être
+          vérifiés et approuvés puisque le chantier peut évoluer entre le relevé
+          et l’installation. Nous garantissons seulement la conception selon les
+          plans de fabrication approuvés.
+
+          <br /><br />Pour les clients qui sont à l’aise de mesurer eux-même,
+          nous avons facilité le travail pour notre clientèle. Nous vous
+          invitons à consulter notre guide pour la prise de mesures.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Pouvons-nous apporter notre bois ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          <strong> Normalement non.</strong>
+
+          <br /><br />La seule exception où nous accepterions de prendre du bois
+          de l’extérieur serait du bois séché au-préalable (pour garantir joints
+          et fini) et que nous avons vu/vérifié pour qu’il n’y ait pas
+          d’impuretés (vis, clous, etc..) qui pourraient endommager nos
+          équipements.
+
+          <br /><br />Le séchage à l’air prend environ 1 an par pouce
+          d’épaisseur. Le séchage au séchoir prend environ 1-3 mois mais est
+          très coûteux (plus que le prix du meuble) et la majorité des séchoirs
+          ont un volume minimum à respecter afin de prendre le mandat.
+
+          <br /><br />Assumant que ces conditions soient rencontrées, nous
+          pourrions en discuter. Autrement nous devrons malheureusement
+          décliner.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>`,
+      },
+      {
+        id: "p2",
+        name: "Limon central - Flatbar 45 degrés",
+        category: "Limon central",
+        base_price: 965,
+        colors: ["#000", "wheat"],
+        image:
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68afc35d588b864ea872d075.webp",
+        images: [
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68afc35d588b864ea872d075.webp",
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68afc35d10035f3fd5a079f7.webp",
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68afc35dd79817a46c3ede74.webp",
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68afc35d2c3667a93dbe7cdf.webp",
+        ],
+        options: [
+          "1 marche (2 enjambées)",
+          "2 marches (3 enjambées)",
+          "3 marches (4 enjambées)",
+          "4 marches (5 enjambées)",
+          "5 marches (6 enjambées)",
+        ],
+
+        desc: `
+ <strong>Description</strong>
+  <ul>
+    <li>Plaques d’acier &frac14;&quot; reliés aux sous-marches, en flatbar avec un angle de 45° pour un profil contemporain ultra-mince</li>
+    <li>Peinture époxy industrielle mate de haute qualité résistante à l'usure</li>
+    <li>Idéal pour espaces modernes, minimalistes, industriels , classiques et plus!</li>
+  </ul>
+  <strong>Services offers</strong>
+  <ul>
+    <li>Prise de mesure et consultation gratuite en personne</li>
+    <li>Livraison possible partout au Québec</li>
+    <li>Installation : Nous faisons affaire avec des sous-contractants pour l'installation. Nous pouvons aussi vous référer à un entrepreneur de votre région.</li>
+  </ul>
+  <strong>Calcul des enjambées</strong>
+  <ul>
+    <li>Nombre de pas entre étages = nombre de marches + 1</li>
+    <li>Exemple : 14 marches = 15 enjambées</li>
+  </ul>
+  <strong>Note :</strong> Toute modification apportée au plan sera facturée au tarif de 125$ de l'heure pour la conception.
+  `,
+
+        details: `
+  <ul>
+    <li><strong>Limon central</strong> : limon en tube d’acier 6"x4", acier structurel ¼" ou 3/16” (selon l’application)</li>
+    <li><strong>Giron standard</strong> : 10"</li>
+    <li><strong>Limon central</strong> : peut supporter des marches jusqu’à 48” de large.</li>
+    <li><strong>Épaisseur des marches</strong> : conçu pour des marches d’un minimum de 1-¾” d’épaisseur</li>
+    <li><strong>Plaques d'ancrage</strong> : Acier structurel ¼". Ancrage dissimulé sous plancher/gypse disponible sur demande</li>
+    <li><strong>Plaques de support de marche</strong> : Acier ¼", 16"x8", fraisées</li>
+    <li><strong>Options d'ancrage</strong> : apparent OU dissimulé</li>
+    <li><strong>Construction</strong> : Acier de qualité supérieure avec soudures professionnelles</li>
+  </ul>`,
+        finis: ` 
+
+  <strong>Éléments de Bois</strong><br>
+  <ul>
+  <li><strong>Brut</strong> : Bois nu sans finition, coupé aux dimensions.</li>
+
+
+  <li><strong>Prêt à teindre</strong> : Bois nu sans finition, coupé aux dimensions, sablé, avec coins arrondis 1/8".</li>
+
+
+  <li><strong>Laqué</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", application d’une laque (mat ou satiné) sur bois naturel.</li>
+
+
+  <li><strong>Teint (Color Match) + Laqué</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", bois teint (selon échantillon client) puis recouvert d’une laque claire (mat ou satiné).</li>
+
+
+  <li><strong>Huilé</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", finition huile claire mate sur bois naturel.</li>
+
+
+  </ul>
+  <strong>Éléments en Acier</strong> 
+  <ul><li><strong>Noir mat / Blanc mat</strong> : Peinture industrielle catalysée (mat ou satiné), appliquée au pistolet.</li></ul>
+  `,
+        faqs: `<section class="faq" id="faq">
+  <h2>FAQ</h2>
+  <div class="faq-container">
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Quel est le délai moyen de fabrication ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          4 à 6 semaines après validation du design et réception de l'acompte.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Livrez-vous partout au Québec ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          Oui, dans toute la province. Des frais peuvent s'appliquer selon la
+          région.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Proposez-vous l'installation ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>Oui, installation professionnelle par notre équipe certifiée.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Quel entretien pour un escalier métal‑bois ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          Entretien minimal : dépoussiérage pour le métal, traitement annuel
+          pour le bois.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Faites-vous la prise de mesures ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          <strong>Oui et non.</strong>
+
+          <br /><br />Notre vocation est celle de manufacturier de composantes
+          exclusivement. Ceci dit, nous pouvons référer un entrepreneur pour
+          faire le relevé des mesures nécessaires à la production de nos plans
+          de fabrication lorsque le projet est relativement simple et à une
+          distance raisonnable.
+
+          <br /><br />L’exactitude des mesures pour la fabrication reste
+          toutefois sous la responsabilité du client et/ou de son entrepreneur
+          et/ou de l’installateur. Nos plans de fabrication doivent être
+          vérifiés et approuvés puisque le chantier peut évoluer entre le relevé
+          et l’installation. Nous garantissons seulement la conception selon les
+          plans de fabrication approuvés.
+
+          <br /><br />Pour les clients qui sont à l’aise de mesurer eux-même,
+          nous avons facilité le travail pour notre clientèle. Nous vous
+          invitons à consulter notre guide pour la prise de mesures.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Pouvons-nous apporter notre bois ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          <strong> Normalement non.</strong>
+
+          <br /><br />La seule exception où nous accepterions de prendre du bois
+          de l’extérieur serait du bois séché au-préalable (pour garantir joints
+          et fini) et que nous avons vu/vérifié pour qu’il n’y ait pas
+          d’impuretés (vis, clous, etc..) qui pourraient endommager nos
+          équipements.
+
+          <br /><br />Le séchage à l’air prend environ 1 an par pouce
+          d’épaisseur. Le séchage au séchoir prend environ 1-3 mois mais est
+          très coûteux (plus que le prix du meuble) et la majorité des séchoirs
+          ont un volume minimum à respecter afin de prendre le mandat.
+
+          <br /><br />Assumant que ces conditions soient rencontrées, nous
+          pourrions en discuter. Autrement nous devrons malheureusement
+          décliner.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>`,
+      },
+      {
+        id: "p3",
+        name: "Limon central - Tube Droit",
+        category: "Limon central",
+        base_price: 575,
+        colors: ["#000", "wheat"],
+        image:
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68afc3ca0c1c5cb198f6c920.webp",
+        images: [
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68afc3ca0c1c5cb198f6c920.webp",
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68afc3ca588b866f9372dd33.webp",
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68afc3ca2c3667494ebe8ac9.webp",
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68afc3ca588b86596572dd37.webp",
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68afc3ca0c1c5c8d02f6c91f.webp",
+        ],
+        options: [
+          "1 marche (2 enjambées)",
+          "2 marches (3 enjambées)",
+          "3 marches (4 enjambées)",
+          "4 marches (5 enjambées)",
+          "5 marches (6 enjambées)",
+        ],
+
+        desc: `
+ <strong>Description</strong>
+  <ul>
+    <li>Limon central avec tubes de support à 90° sans soudure apparente, pour un look contemporain unique.</li>
+    <li>Peinture époxy industrielle mate de haute qualité résistante à l'usure</li>
+    <li>Idéal pour espaces modernes, minimalistes, industriels , classiques et plus!</li>
+  </ul>
+  <strong>Services offers</strong>
+  <ul>
+    <li>Prise de mesure et consultation gratuite en personne</li>
+    <li>Livraison possible partout au Québec</li>
+    <li>Installation : Nous faisons affaire avec des sous-contractants pour l'installation. Nous pouvons aussi vous référer à un entrepreneur de votre région.</li>
+  </ul>
+  <strong>Calcul des enjambées</strong>
+  <ul>
+    <li>Nombre de pas entre étages = nombre de marches + 1</li>
+    <li>Exemple : 14 marches = 15 enjambées</li>
+  </ul>
+  <strong>Note :</strong> Toute modification apportée au plan sera facturée au tarif de 125$ de l'heure pour la conception.
+  `,
+
+        details: `
+  <ul>
+    <li><strong>Limon central</strong> : limon en tube d’acier 6"x4", acier structurel ¼" ou 3/16” (selon l’application)</li>
+    <li><strong>Giron standard</strong> : 10"</li>
+    <li><strong>Limon central</strong> : peut supporter des marches jusqu’à 48” de large.</li>
+    <li><strong>Épaisseur des marches</strong> : conçu pour des marches d’un minimum de 1-¾” d’épaisseur</li>
+    <li><strong>Plaques d'ancrage</strong> : Acier structurel ¼". Ancrage dissimulé sous plancher/gypse disponible sur demande</li>
+    <li><strong>Plaques de support de marche</strong> : Acier ¼", 16"x8", fraisées</li>
+    <li><strong>Options d'ancrage</strong> : apparent OU dissimulé</li>
+    <li><strong>Construction</strong> : Acier de qualité supérieure avec soudures professionnelles</li>
+  </ul>`,
+        finis: ` 
+
+  <strong>Éléments de Bois</strong><br>
+  <ul>
+  <li><strong>Brut</strong> : Bois nu sans finition, coupé aux dimensions.</li>
+
+
+  <li><strong>Prêt à teindre</strong> : Bois nu sans finition, coupé aux dimensions, sablé, avec coins arrondis 1/8".</li>
+
+
+  <li><strong>Laqué</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", application d’une laque (mat ou satiné) sur bois naturel.</li>
+
+
+  <li><strong>Teint (Color Match) + Laqué</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", bois teint (selon échantillon client) puis recouvert d’une laque claire (mat ou satiné).</li>
+
+
+  <li><strong>Huilé</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", finition huile claire mate sur bois naturel.</li>
+
+
+  </ul>
+  <strong>Éléments en Acier</strong> 
+  <ul><li><strong>Noir mat / Blanc mat</strong> : Peinture industrielle catalysée (mat ou satiné), appliquée au pistolet.</li></ul>
+  `,
+        faqs: `<section class="faq" id="faq">
+  <h2>FAQ</h2>
+  <div class="faq-container">
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Quel est le délai moyen de fabrication ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          4 à 6 semaines après validation du design et réception de l'acompte.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Livrez-vous partout au Québec ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          Oui, dans toute la province. Des frais peuvent s'appliquer selon la
+          région.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Proposez-vous l'installation ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>Oui, installation professionnelle par notre équipe certifiée.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Quel entretien pour un escalier métal‑bois ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          Entretien minimal : dépoussiérage pour le métal, traitement annuel
+          pour le bois.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Faites-vous la prise de mesures ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          <strong>Oui et non.</strong>
+
+          <br /><br />Notre vocation est celle de manufacturier de composantes
+          exclusivement. Ceci dit, nous pouvons référer un entrepreneur pour
+          faire le relevé des mesures nécessaires à la production de nos plans
+          de fabrication lorsque le projet est relativement simple et à une
+          distance raisonnable.
+
+          <br /><br />L’exactitude des mesures pour la fabrication reste
+          toutefois sous la responsabilité du client et/ou de son entrepreneur
+          et/ou de l’installateur. Nos plans de fabrication doivent être
+          vérifiés et approuvés puisque le chantier peut évoluer entre le relevé
+          et l’installation. Nous garantissons seulement la conception selon les
+          plans de fabrication approuvés.
+
+          <br /><br />Pour les clients qui sont à l’aise de mesurer eux-même,
+          nous avons facilité le travail pour notre clientèle. Nous vous
+          invitons à consulter notre guide pour la prise de mesures.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Pouvons-nous apporter notre bois ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          <strong> Normalement non.</strong>
+
+          <br /><br />La seule exception où nous accepterions de prendre du bois
+          de l’extérieur serait du bois séché au-préalable (pour garantir joints
+          et fini) et que nous avons vu/vérifié pour qu’il n’y ait pas
+          d’impuretés (vis, clous, etc..) qui pourraient endommager nos
+          équipements.
+
+          <br /><br />Le séchage à l’air prend environ 1 an par pouce
+          d’épaisseur. Le séchage au séchoir prend environ 1-3 mois mais est
+          très coûteux (plus que le prix du meuble) et la majorité des séchoirs
+          ont un volume minimum à respecter afin de prendre le mandat.
+
+          <br /><br />Assumant que ces conditions soient rencontrées, nous
+          pourrions en discuter. Autrement nous devrons malheureusement
+          décliner.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>`,
+      },
+      {
+        id: "p4",
+        name: "Limon central - Flat Bar Droit",
+        category: "Limon central",
+        base_price: 800,
+        colors: ["#000"],
+        image:
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68afc455d798172f2a3f010f.webp",
+        images: [
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68afc455d798172f2a3f010f.webp",
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68afc455d79817fcef3f010e.webp",
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68afc45510035f2fb1a09bc9.webp",
+        ],
+        options: [
+          "1 marche (2 enjambées)",
+          "2 marches (3 enjambées)",
+          "3 marches (4 enjambées)",
+          "4 marches (5 enjambées)",
+          "5 marches (6 enjambées)",
+        ],
+
+        desc: `
+ <strong>Description</strong>
+  <ul>
+    <li>Plaques d’acier &frac14;&quot; reliés aux sous-marches, en flatbar avec un angle de 90° pour un profil contemporain ultra-mince</li>
+    <li>Peinture époxy industrielle mate de haute qualité résistante à l'usure</li>
+    <li>Idéal pour espaces modernes, minimalistes, industriels , classiques et plus!</li>
+  </ul>
+  <strong>Services offers</strong>
+  <ul>
+    <li>Prise de mesure et consultation gratuite en personne</li>
+    <li>Livraison possible partout au Québec</li>
+    <li>Installation : Nous faisons affaire avec des sous-contractants pour l'installation. Nous pouvons aussi vous référer à un entrepreneur de votre région.</li>
+  </ul>
+  <strong>Calcul des enjambées</strong>
+  <ul>
+    <li>Nombre de pas entre étages = nombre de marches + 1</li>
+    <li>Exemple : 14 marches = 15 enjambées</li>
+  </ul>
+  <strong>Note :</strong> Toute modification apportée au plan sera facturée au tarif de 125$ de l'heure pour la conception.
+  `,
+        details: `
+  <ul>
+    <li><strong>Limon central</strong> : limon en tube d’acier 6"x4", acier structurel ¼" ou 3/16” (selon l’application)</li>
+    <li><strong>Giron standard</strong> : 10"</li>
+    <li><strong>Limon central</strong> : peut supporter des marches jusqu’à 48” de large.</li>
+    <li><strong>Épaisseur des marches</strong> : conçu pour des marches d’un minimum de 1-¾” d’épaisseur</li>
+    <li><strong>Plaques d'ancrage</strong> : Acier structurel ¼". Ancrage dissimulé sous plancher/gypse disponible sur demande</li>
+    <li><strong>Plaques de support de marche</strong> : Acier ¼", 16"x8", fraisées</li>
+    <li><strong>Options d'ancrage</strong> : apparent OU dissimulé</li>
+    <li><strong>Construction</strong> : Acier de qualité supérieure avec soudures professionnelles</li>
+  </ul>`,
+        finis: ` 
+
+  <strong>Éléments de Bois</strong><br>
+  <ul>
+  <li><strong>Brut</strong> : Bois nu sans finition, coupé aux dimensions.</li>
+
+
+  <li><strong>Prêt à teindre</strong> : Bois nu sans finition, coupé aux dimensions, sablé, avec coins arrondis 1/8".</li>
+
+
+  <li><strong>Laqué</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", application d’une laque (mat ou satiné) sur bois naturel.</li>
+
+
+  <li><strong>Teint (Color Match) + Laqué</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", bois teint (selon échantillon client) puis recouvert d’une laque claire (mat ou satiné).</li>
+
+
+  <li><strong>Huilé</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", finition huile claire mate sur bois naturel.</li>
+
+
+  </ul>
+  <strong>Éléments en Acier</strong> 
+  <ul><li><strong>Noir mat / Blanc mat</strong> : Peinture industrielle catalysée (mat ou satiné), appliquée au pistolet.</li></ul>
+  `,
+        faqs: `<section class="faq" id="faq">
+  <h2>FAQ</h2>
+  <div class="faq-container">
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Quel est le délai moyen de fabrication ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          4 à 6 semaines après validation du design et réception de l'acompte.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Livrez-vous partout au Québec ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          Oui, dans toute la province. Des frais peuvent s'appliquer selon la
+          région.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Proposez-vous l'installation ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>Oui, installation professionnelle par notre équipe certifiée.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Quel entretien pour un escalier métal‑bois ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          Entretien minimal : dépoussiérage pour le métal, traitement annuel
+          pour le bois.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Faites-vous la prise de mesures ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          <strong>Oui et non.</strong>
+
+          <br /><br />Notre vocation est celle de manufacturier de composantes
+          exclusivement. Ceci dit, nous pouvons référer un entrepreneur pour
+          faire le relevé des mesures nécessaires à la production de nos plans
+          de fabrication lorsque le projet est relativement simple et à une
+          distance raisonnable.
+
+          <br /><br />L’exactitude des mesures pour la fabrication reste
+          toutefois sous la responsabilité du client et/ou de son entrepreneur
+          et/ou de l’installateur. Nos plans de fabrication doivent être
+          vérifiés et approuvés puisque le chantier peut évoluer entre le relevé
+          et l’installation. Nous garantissons seulement la conception selon les
+          plans de fabrication approuvés.
+
+          <br /><br />Pour les clients qui sont à l’aise de mesurer eux-même,
+          nous avons facilité le travail pour notre clientèle. Nous vous
+          invitons à consulter notre guide pour la prise de mesures.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Pouvons-nous apporter notre bois ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          <strong> Normalement non.</strong>
+
+          <br /><br />La seule exception où nous accepterions de prendre du bois
+          de l’extérieur serait du bois séché au-préalable (pour garantir joints
+          et fini) et que nous avons vu/vérifié pour qu’il n’y ait pas
+          d’impuretés (vis, clous, etc..) qui pourraient endommager nos
+          équipements.
+
+          <br /><br />Le séchage à l’air prend environ 1 an par pouce
+          d’épaisseur. Le séchage au séchoir prend environ 1-3 mois mais est
+          très coûteux (plus que le prix du meuble) et la majorité des séchoirs
+          ont un volume minimum à respecter afin de prendre le mandat.
+
+          <br /><br />Assumant que ces conditions soient rencontrées, nous
+          pourrions en discuter. Autrement nous devrons malheureusement
+          décliner.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>`,
+      },
+      {
+        id: "p5",
+        name: "Limon Latéraux - Tubes",
+        category: "Double limon",
+        base_price: 1450,
+        colors: ["#000"],
+        image:
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68afc4e7588b867768730683.webp",
+        images: [
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68afc4e7588b867768730683.webp",
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68afc4e72c3667240ebeb3dd.webp",
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68afc4e7d7981776c63f1501.webp",
+        ],
+        options: [
+          "10 marches",
+          "11 marches",
+          "12 marches",
+          "13 marches",
+          "14 marches",
+          "15 marches",
+        ],
+
+        desc: `
+    <strong>Description</strong>
+  <ul>  
+    <li>Limons latéraux en acier avec deux tubes de 10&quot;x2&quot;.</li>
+    <li>Peinture à époxy industrielle mate de haute qualité résistante aux égratignures.</li>
+    <li>Idéal pour espaces modernes, minimaliste, industriel , classique et plus!</li>
+  </ul>
+  <strong>Services offers</strong>
+  <ul>
+    <li>Prise de mesure et consultation gratuite en personne</li>
+    <li>Livraison possible partout au Québec</li>
+    <li>Installation : Nous faisons affaire avec des sous-contractants pour l'installation. Nous pouvons aussi vous référer à un entrepreneur de votre région</li>
+  </ul>
+  <strong>Calcul des enjambées</strong>
+  <ul>
+    <li>Nombre de pas entre étages = nombre de marches + 1</li>
+    <li>Exemple : 14 marches = 15 enjambées</li>
+  </ul>
+  <strong>Note :</strong> Toute modification apportée au plan sera facturée au tarif de 125$ de l'heure pour la conception.
+  `,
+
+        details: `<ul>
+    <li>Prise de mesure et consultation gratuite en personne</li>
+    <li>Livraison possible partout au Québec</li>
+    <li>Installation : Nous faisons affaire avec des sous-contractants pour l'installation. Nous pouvons aussi vous référer à un entrepreneur de votre région</li>
+  </ul>`,
+        finis: ` 
+
+  <strong>Éléments de Bois</strong><br>
+  <ul>
+  <li><strong>Brut</strong> : Bois nu sans finition, coupé aux dimensions.</li>
+
+
+  <li><strong>Prêt à teindre</strong> : Bois nu sans finition, coupé aux dimensions, sablé, avec coins arrondis 1/8".</li>
+
+
+  <li><strong>Laqué</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", application d’une laque (mat ou satiné) sur bois naturel.</li>
+
+
+  <li><strong>Teint (Color Match) + Laqué</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", bois teint (selon échantillon client) puis recouvert d’une laque claire (mat ou satiné).</li>
+
+
+  <li><strong>Huilé</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", finition huile claire mate sur bois naturel.</li>
+
+
+  </ul>
+  <strong>Éléments en Acier</strong> 
+  <ul><li><strong>Noir mat / Blanc mat</strong> : Peinture industrielle catalysée (mat ou satiné), appliquée au pistolet.</li></ul>
+  `,
+        faqs: `<section class="faq" id="faq">
+  <h2>FAQ</h2>
+  <div class="faq-container">
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Quel est le délai moyen de fabrication ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          4 à 6 semaines après validation du design et réception de l'acompte.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Livrez-vous partout au Québec ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          Oui, dans toute la province. Des frais peuvent s'appliquer selon la
+          région.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Proposez-vous l'installation ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>Oui, installation professionnelle par notre équipe certifiée.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Quel entretien pour un escalier métal‑bois ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          Entretien minimal : dépoussiérage pour le métal, traitement annuel
+          pour le bois.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Faites-vous la prise de mesures ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          <strong>Oui et non.</strong>
+
+          <br /><br />Notre vocation est celle de manufacturier de composantes
+          exclusivement. Ceci dit, nous pouvons référer un entrepreneur pour
+          faire le relevé des mesures nécessaires à la production de nos plans
+          de fabrication lorsque le projet est relativement simple et à une
+          distance raisonnable.
+
+          <br /><br />L’exactitude des mesures pour la fabrication reste
+          toutefois sous la responsabilité du client et/ou de son entrepreneur
+          et/ou de l’installateur. Nos plans de fabrication doivent être
+          vérifiés et approuvés puisque le chantier peut évoluer entre le relevé
+          et l’installation. Nous garantissons seulement la conception selon les
+          plans de fabrication approuvés.
+
+          <br /><br />Pour les clients qui sont à l’aise de mesurer eux-même,
+          nous avons facilité le travail pour notre clientèle. Nous vous
+          invitons à consulter notre guide pour la prise de mesures.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Pouvons-nous apporter notre bois ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          <strong> Normalement non.</strong>
+
+          <br /><br />La seule exception où nous accepterions de prendre du bois
+          de l’extérieur serait du bois séché au-préalable (pour garantir joints
+          et fini) et que nous avons vu/vérifié pour qu’il n’y ait pas
+          d’impuretés (vis, clous, etc..) qui pourraient endommager nos
+          équipements.
+
+          <br /><br />Le séchage à l’air prend environ 1 an par pouce
+          d’épaisseur. Le séchage au séchoir prend environ 1-3 mois mais est
+          très coûteux (plus que le prix du meuble) et la majorité des séchoirs
+          ont un volume minimum à respecter afin de prendre le mandat.
+
+          <br /><br />Assumant que ces conditions soient rencontrées, nous
+          pourrions en discuter. Autrement nous devrons malheureusement
+          décliner.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>`,
+      },
+      {
+        id: "p6",
+        name: "Limon Latéraux - C Channel",
+        category: "Double limon",
+        base_price: 1650,
+        colors: ["#000", "#d1b892"],
+        image:
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68afc54510035f3652a0b8a6.webp",
+        images: [
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68afc54510035f3652a0b8a6.webp",
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68afc545d79817b2633f2802.webp",
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68afc545588b868d7773164e.webp",
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68afc545d79817579a3f2801.webp",
+        ],
+        options: [
+          "10 marches",
+          "11 marches",
+          "12 marches",
+          "13 marches",
+          "14 marches",
+          "15 marches",
+        ],
+
+        desc: `
+    <strong>Description</strong>
+  <ul>  
+    <li>Limons latéraux en profilé C d'acier.</li>
+    <li>Peinture à époxy industrielle mate de haute qualité résistante aux égratignures.</li>
+    <li>Idéal pour espaces modernes, minimaliste, industriel , classique et plus!</li>
+  </ul>
+  <strong>Services offers</strong>
+  <ul>
+    <li>Prise de mesure et consultation gratuite en personne</li>
+    <li>Livraison possible partout au Québec</li>
+    <li>Installation : Nous faisons affaire avec des sous-contractants pour l'installation. Nous pouvons aussi vous référer à un entrepreneur de votre région</li>
+  </ul>
+  <strong>Calcul des enjambées</strong>
+  <ul>
+    <li>Nombre de pas entre étages = nombre de marches + 1</li>
+    <li>Exemple : 14 marches = 15 enjambées</li>
+  </ul>
+  <strong>Note :</strong> Toute modification apportée au plan sera facturée au tarif de 125$ de l'heure pour la conception.
+  `,
+
+        details: `<strong>Spécifications</strong><br>• C Channel 6" x 2" x ¼"<br>• Capacité: 400 lbs/marche<br>• Ancrages renforcés<br>• Plaques de montage épaisses`,
+        finis: `Noir mat (standard), Blanc, Acier brut`,
+        faqs: `<section class="faq" id="faq">
+  <h2>FAQ</h2>
+  <div class="faq-container">
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Quel est le délai moyen de fabrication ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          4 à 6 semaines après validation du design et réception de l'acompte.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Livrez-vous partout au Québec ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          Oui, dans toute la province. Des frais peuvent s'appliquer selon la
+          région.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Proposez-vous l'installation ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>Oui, installation professionnelle par notre équipe certifiée.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Quel entretien pour un escalier métal‑bois ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          Entretien minimal : dépoussiérage pour le métal, traitement annuel
+          pour le bois.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Faites-vous la prise de mesures ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          <strong>Oui et non.</strong>
+
+          <br /><br />Notre vocation est celle de manufacturier de composantes
+          exclusivement. Ceci dit, nous pouvons référer un entrepreneur pour
+          faire le relevé des mesures nécessaires à la production de nos plans
+          de fabrication lorsque le projet est relativement simple et à une
+          distance raisonnable.
+
+          <br /><br />L’exactitude des mesures pour la fabrication reste
+          toutefois sous la responsabilité du client et/ou de son entrepreneur
+          et/ou de l’installateur. Nos plans de fabrication doivent être
+          vérifiés et approuvés puisque le chantier peut évoluer entre le relevé
+          et l’installation. Nous garantissons seulement la conception selon les
+          plans de fabrication approuvés.
+
+          <br /><br />Pour les clients qui sont à l’aise de mesurer eux-même,
+          nous avons facilité le travail pour notre clientèle. Nous vous
+          invitons à consulter notre guide pour la prise de mesures.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Pouvons-nous apporter notre bois ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          <strong> Normalement non.</strong>
+
+          <br /><br />La seule exception où nous accepterions de prendre du bois
+          de l’extérieur serait du bois séché au-préalable (pour garantir joints
+          et fini) et que nous avons vu/vérifié pour qu’il n’y ait pas
+          d’impuretés (vis, clous, etc..) qui pourraient endommager nos
+          équipements.
+
+          <br /><br />Le séchage à l’air prend environ 1 an par pouce
+          d’épaisseur. Le séchage au séchoir prend environ 1-3 mois mais est
+          très coûteux (plus que le prix du meuble) et la majorité des séchoirs
+          ont un volume minimum à respecter afin de prendre le mandat.
+
+          <br /><br />Assumant que ces conditions soient rencontrées, nous
+          pourrions en discuter. Autrement nous devrons malheureusement
+          décliner.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>`,
+      },
+      {
+        id: "p7",
+        name: "Limon Latéraux - Flat Bar",
+        category: "Double limon",
+        base_price: 1850,
+        colors: ["#000"],
+        image:
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68afc57bd7981702f93f2fb4.webp",
+        images: [
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68afc57bd7981702f93f2fb4.webp",
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68afc57b2c3667197ebec99e.webp",
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68afc57b588b860964731e1f.webp",
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68afc57b0c1c5c6fb1f70b46.webp",
+        ],
+        options: [
+          "10 marches",
+          "11 marches",
+          "12 marches",
+          "13 marches",
+          "14 marches",
+          "15 marches",
+        ],
+
+        desc: `
+    <strong>Description</strong>
+  <ul>  
+    <li>Limons latéraux en acier de flat bar d'acier pour profil ultra-mince.</li>
+    <li>Peinture à époxy industrielle mate de haute qualité résistante aux égratignures.</li>
+    <li>Idéal pour espaces modernes, minimaliste, industriel , classique et plus!</li>
+  </ul>
+  <strong>Services offers</strong>
+  <ul>
+    <li>Prise de mesure et consultation gratuite en personne</li>
+    <li>Livraison possible partout au Québec</li>
+    <li>Installation : Nous faisons affaire avec des sous-contractants pour l'installation. Nous pouvons aussi vous référer à un entrepreneur de votre région</li>
+  </ul>
+  <strong>Calcul des enjambées</strong>
+  <ul>
+    <li>Nombre de pas entre étages = nombre de marches + 1</li>
+    <li>Exemple : 14 marches = 15 enjambées</li>
+  </ul>
+  <strong>Note :</strong> Toute modification apportée au plan sera facturée au tarif de 125$ de l'heure pour la conception.
+  `,
+
+        finis: `Noir mat (standard), Blanc, Acier brut, Acier poli`,
+        faqs: `<section class="faq" id="faq">
+  <h2>FAQ</h2>
+  <div class="faq-container">
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Quel est le délai moyen de fabrication ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          4 à 6 semaines après validation du design et réception de l'acompte.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Livrez-vous partout au Québec ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          Oui, dans toute la province. Des frais peuvent s'appliquer selon la
+          région.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Proposez-vous l'installation ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>Oui, installation professionnelle par notre équipe certifiée.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Quel entretien pour un escalier métal‑bois ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          Entretien minimal : dépoussiérage pour le métal, traitement annuel
+          pour le bois.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Faites-vous la prise de mesures ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          <strong>Oui et non.</strong>
+
+          <br /><br />Notre vocation est celle de manufacturier de composantes
+          exclusivement. Ceci dit, nous pouvons référer un entrepreneur pour
+          faire le relevé des mesures nécessaires à la production de nos plans
+          de fabrication lorsque le projet est relativement simple et à une
+          distance raisonnable.
+
+          <br /><br />L’exactitude des mesures pour la fabrication reste
+          toutefois sous la responsabilité du client et/ou de son entrepreneur
+          et/ou de l’installateur. Nos plans de fabrication doivent être
+          vérifiés et approuvés puisque le chantier peut évoluer entre le relevé
+          et l’installation. Nous garantissons seulement la conception selon les
+          plans de fabrication approuvés.
+
+          <br /><br />Pour les clients qui sont à l’aise de mesurer eux-même,
+          nous avons facilité le travail pour notre clientèle. Nous vous
+          invitons à consulter notre guide pour la prise de mesures.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Pouvons-nous apporter notre bois ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          <strong> Normalement non.</strong>
+
+          <br /><br />La seule exception où nous accepterions de prendre du bois
+          de l’extérieur serait du bois séché au-préalable (pour garantir joints
+          et fini) et que nous avons vu/vérifié pour qu’il n’y ait pas
+          d’impuretés (vis, clous, etc..) qui pourraient endommager nos
+          équipements.
+
+          <br /><br />Le séchage à l’air prend environ 1 an par pouce
+          d’épaisseur. Le séchage au séchoir prend environ 1-3 mois mais est
+          très coûteux (plus que le prix du meuble) et la majorité des séchoirs
+          ont un volume minimum à respecter afin de prendre le mandat.
+
+          <br /><br />Assumant que ces conditions soient rencontrées, nous
+          pourrions en discuter. Autrement nous devrons malheureusement
+          décliner.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>`,
+      },
+      {
+        id: "p8",
+        name: "Marches en Érable",
+        category: "Marches",
+        base_price: 120,
+        colors: ["#e5caa0"],
+        unit: "/marche",
+        image:
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68b0a01509ec256cb3937aab.webp",
+        images: [
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68b0a01509ec256cb3937aab.webp",
+        ],
+        options: ['36" de large', '42" de large', '48" de large'],
+        desc: `
+     <strong>Description</strong>
+  Le merisier se distingue par ses magnifiques tons chauds naturels, évoluant du brun clair au rouge profond, avec une texture remarquablement uniforme et un grain fin. Ce bois noble apporte une élégance raffinée et crée une ambiance chaleureuse très accueillante, s'harmonisant parfaitement avec les styles contemporains et épurés.
+  <br><br><strong>Finis disponibles</strong>
+      <ul>
+          <li><strong>Sans Finition</strong>
+              <ul>
+                <li>Brute (coupé à dimensions seulement)</li>
+                <li>Prête à teindre (brute sablé et coin arrondie à la toupie ⅛”)</li>
+              </ul>
+          </li>
+
+          <li><strong>Avec Finition</strong>
+              <ul>
+                <li>Polyuréthane commerciale (mat ou satiné)</li>
+                <li>Color match + poly (mat ou satiné)</li>
+                <li>Huile commerciale sur bois naturel</li>
+              </ul>
+          </li>
+      </ul>
+  <strong>Services offerts</strong>
+  <ul>
+    <li>Prise de mesure et consultation gratuite en personne</li>
+    <li>Livraison possible partout au Québec</li>
+    <li>Installation : Nous faisons affaire avec des sous-contractants pour l'installation. Nous pouvons aussi vous référer à un entrepreneur de votre région</li> 
+    </ul>
+  <strong>Comformité</strong>
+  <p><br>Certaines épaisseurs ou dimensions pourraient ne pas respecter le code du bâtiment selon l’usage prévu (résidentiel, commercial, escaliers ouverts ou fermés). Il appartient au client de vérifier la conformité avant de passer sa commande.</p>
+  <p><br>Par défaut, nous proposons une marche de 11” afin de respecter les exigences du CNB 2015, soit un giron minimal de 10” avec un nez de marche de 1”. Il est possible de fabriquer en dehors de ces normes, mais les plans porteront alors la mention que l’escalier n’est pas conforme.</p>
+    `,
+
+        details: `<ul>
+    <li><strong>Largeurs standard</strong> : 36", 42", 48"</li>
+    <li><strong>Profondeur de marche standard</strong> : 11"</li>
+    <li><strong>Épaisseurs standard</strong> : 1-⅙”, 1-3/4", 2", 2-1/2", 3". Les épaisseurs de 2” et plus sont en collage.</li>
+    <li><strong>Coins</strong> : arrondis à ⅛” à la toupie.</li>
+  </ul>`,
+        finis: ` 
+
+  <strong>Éléments de Bois</strong><br>
+  <ul>
+  <li><strong>Brut</strong> : Bois nu sans finition, coupé aux dimensions.</li>
+
+
+  <li><strong>Prêt à teindre</strong> : Bois nu sans finition, coupé aux dimensions, sablé, avec coins arrondis 1/8".</li>
+
+
+  <li><strong>Laqué</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", application d’une laque (mat ou satiné) sur bois naturel.</li>
+
+
+  <li><strong>Teint (Color Match) + Laqué</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", bois teint (selon échantillon client) puis recouvert d’une laque claire (mat ou satiné).</li>
+
+
+  <li><strong>Huilé</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", finition huile claire mate sur bois naturel.</li>
+
+
+  </ul>
+  <strong>Éléments en Acier</strong> 
+  <ul><li><strong>Noir mat / Blanc mat</strong> : Peinture industrielle catalysée (mat ou satiné), appliquée au pistolet.</li></ul>
+  `,
+        faqs: `<section class="faq" id="faq">
+  <h2>FAQ</h2>
+  <div class="faq-container">
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Quel est le délai moyen de fabrication ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          4 à 6 semaines après validation du design et réception de l'acompte.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Livrez-vous partout au Québec ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          Oui, dans toute la province. Des frais peuvent s'appliquer selon la
+          région.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Proposez-vous l'installation ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>Oui, installation professionnelle par notre équipe certifiée.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Quel entretien pour un escalier métal‑bois ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          Entretien minimal : dépoussiérage pour le métal, traitement annuel
+          pour le bois.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Faites-vous la prise de mesures ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          <strong>Oui et non.</strong>
+
+          <br /><br />Notre vocation est celle de manufacturier de composantes
+          exclusivement. Ceci dit, nous pouvons référer un entrepreneur pour
+          faire le relevé des mesures nécessaires à la production de nos plans
+          de fabrication lorsque le projet est relativement simple et à une
+          distance raisonnable.
+
+          <br /><br />L’exactitude des mesures pour la fabrication reste
+          toutefois sous la responsabilité du client et/ou de son entrepreneur
+          et/ou de l’installateur. Nos plans de fabrication doivent être
+          vérifiés et approuvés puisque le chantier peut évoluer entre le relevé
+          et l’installation. Nous garantissons seulement la conception selon les
+          plans de fabrication approuvés.
+
+          <br /><br />Pour les clients qui sont à l’aise de mesurer eux-même,
+          nous avons facilité le travail pour notre clientèle. Nous vous
+          invitons à consulter notre guide pour la prise de mesures.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Pouvons-nous apporter notre bois ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          <strong> Normalement non.</strong>
+
+          <br /><br />La seule exception où nous accepterions de prendre du bois
+          de l’extérieur serait du bois séché au-préalable (pour garantir joints
+          et fini) et que nous avons vu/vérifié pour qu’il n’y ait pas
+          d’impuretés (vis, clous, etc..) qui pourraient endommager nos
+          équipements.
+
+          <br /><br />Le séchage à l’air prend environ 1 an par pouce
+          d’épaisseur. Le séchage au séchoir prend environ 1-3 mois mais est
+          très coûteux (plus que le prix du meuble) et la majorité des séchoirs
+          ont un volume minimum à respecter afin de prendre le mandat.
+
+          <br /><br />Assumant que ces conditions soient rencontrées, nous
+          pourrions en discuter. Autrement nous devrons malheureusement
+          décliner.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>`,
+      },
+      {
+        id: "p8b",
+        name: "Marches en Chêne Rouge",
+        category: "Marches",
+        base_price: 130,
+        colors: ["#c8916d"],
+        unit: "/marche",
+        image:
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68b09f79621e110cb0672379.webp",
+        images: [
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68b09f79621e110cb0672379.webp",
+        ],
+        options: ['36" de large', '42" de large', '48" de large'],
+        desc: `
+     <strong>Description</strong>
+Le chêne rouge offre une magnifique palette de couleurs naturelles, du rose tendre au rouge brunâtre, avec un grain distinctif et richement texturé. Son aspect classique et chaleureux apporte une luminosité naturelle à votre escalier, créant une atmosphère accueillante et noble qui traverse les époques.  <br><br><strong>Finis disponibles</strong>
+      <ul>
+          <li><strong>Sans Finition</strong>
+              <ul>
+                <li>Brute (coupé à dimensions seulement)</li>
+                <li>Prête à teindre (brute sablé et coin arrondie à la toupie ⅛”)</li>
+              </ul>
+          </li>
+
+          <li><strong>Avec Finition</strong>
+              <ul>
+                <li>Polyuréthane commerciale (mat ou satiné)</li>
+                <li>Color match + poly (mat ou satiné)</li>
+                <li>Huile commerciale sur bois naturel</li>
+              </ul>
+          </li>
+      </ul>
+  <strong>Services offerts</strong>
+  <ul>
+    <li>Prise de mesure et consultation gratuite en personne</li>
+    <li>Livraison possible partout au Québec</li>
+    <li>Installation : Nous faisons affaire avec des sous-contractants pour l'installation. Nous pouvons aussi vous référer à un entrepreneur de votre région</li> 
+    </ul>
+  <strong>Comformité</strong>
+  <p><br>Certaines épaisseurs ou dimensions pourraient ne pas respecter le code du bâtiment selon l’usage prévu (résidentiel, commercial, escaliers ouverts ou fermés). Il appartient au client de vérifier la conformité avant de passer sa commande.</p>
+  <p><br>Par défaut, nous proposons une marche de 11” afin de respecter les exigences du CNB 2015, soit un giron minimal de 10” avec un nez de marche de 1”. Il est possible de fabriquer en dehors de ces normes, mais les plans porteront alors la mention que l’escalier n’est pas conforme.</p>
+    `,
+        details: `<ul>
+    <li><strong>Largeurs standard</strong> : 36", 42", 48"</li>
+    <li><strong>Profondeur de marche standard</strong> : 11"</li>
+    <li><strong>Épaisseurs standard</strong> : 1-⅙”, 1-3/4", 2", 2-1/2", 3". Les épaisseurs de 2” et plus sont en collage.</li>
+    <li><strong>Coins</strong> : arrondis à ⅛” à la toupie.</li>
+  </ul>`,
+        finis: ` 
+
+  <strong>Éléments de Bois</strong><br>
+  <ul>
+  <li><strong>Brut</strong> : Bois nu sans finition, coupé aux dimensions.</li>
+
+
+  <li><strong>Prêt à teindre</strong> : Bois nu sans finition, coupé aux dimensions, sablé, avec coins arrondis 1/8".</li>
+
+
+  <li><strong>Laqué</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", application d’une laque (mat ou satiné) sur bois naturel.</li>
+
+
+  <li><strong>Teint (Color Match) + Laqué</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", bois teint (selon échantillon client) puis recouvert d’une laque claire (mat ou satiné).</li>
+
+
+  <li><strong>Huilé</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", finition huile claire mate sur bois naturel.</li>
+
+
+  </ul>
+  <strong>Éléments en Acier</strong> 
+  <ul><li><strong>Noir mat / Blanc mat</strong> : Peinture industrielle catalysée (mat ou satiné), appliquée au pistolet.</li></ul>
+  `,
+        faqs: `<section class="faq" id="faq">
+  <h2>FAQ</h2>
+  <div class="faq-container">
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Quel est le délai moyen de fabrication ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          4 à 6 semaines après validation du design et réception de l'acompte.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Livrez-vous partout au Québec ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          Oui, dans toute la province. Des frais peuvent s'appliquer selon la
+          région.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Proposez-vous l'installation ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>Oui, installation professionnelle par notre équipe certifiée.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Quel entretien pour un escalier métal‑bois ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          Entretien minimal : dépoussiérage pour le métal, traitement annuel
+          pour le bois.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Faites-vous la prise de mesures ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          <strong>Oui et non.</strong>
+
+          <br /><br />Notre vocation est celle de manufacturier de composantes
+          exclusivement. Ceci dit, nous pouvons référer un entrepreneur pour
+          faire le relevé des mesures nécessaires à la production de nos plans
+          de fabrication lorsque le projet est relativement simple et à une
+          distance raisonnable.
+
+          <br /><br />L’exactitude des mesures pour la fabrication reste
+          toutefois sous la responsabilité du client et/ou de son entrepreneur
+          et/ou de l’installateur. Nos plans de fabrication doivent être
+          vérifiés et approuvés puisque le chantier peut évoluer entre le relevé
+          et l’installation. Nous garantissons seulement la conception selon les
+          plans de fabrication approuvés.
+
+          <br /><br />Pour les clients qui sont à l’aise de mesurer eux-même,
+          nous avons facilité le travail pour notre clientèle. Nous vous
+          invitons à consulter notre guide pour la prise de mesures.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Pouvons-nous apporter notre bois ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          <strong> Normalement non.</strong>
+
+          <br /><br />La seule exception où nous accepterions de prendre du bois
+          de l’extérieur serait du bois séché au-préalable (pour garantir joints
+          et fini) et que nous avons vu/vérifié pour qu’il n’y ait pas
+          d’impuretés (vis, clous, etc..) qui pourraient endommager nos
+          équipements.
+
+          <br /><br />Le séchage à l’air prend environ 1 an par pouce
+          d’épaisseur. Le séchage au séchoir prend environ 1-3 mois mais est
+          très coûteux (plus que le prix du meuble) et la majorité des séchoirs
+          ont un volume minimum à respecter afin de prendre le mandat.
+
+          <br /><br />Assumant que ces conditions soient rencontrées, nous
+          pourrions en discuter. Autrement nous devrons malheureusement
+          décliner.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>`,
+      },
+      {
+        id: "p8c",
+        name: "Marches en Noyer Noir",
+        category: "Marches",
+        base_price: 150,
+        colors: ["#5c4033"],
+        unit: "/marche",
+        image:
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68b09f8c66583932659e8c33.webp",
+        images: [
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68b09f8c66583932659e8c33.webp",
+        ],
+        options: ['36" de large', '42" de large', '48" de large'],
+        desc: `
+     <strong>Description</strong>
+Le noyer noir présente des nuances allant du brun pâle au brun chocolat foncé, un grain parfois figuré. Il apporte une touche de luxe et avec une allure profonde et élégante.  <br><br><strong>Finis disponibles</strong>
+      <ul>
+          <li><strong>Sans Finition</strong>
+              <ul>
+                <li>Brute (coupé à dimensions seulement)</li>
+                <li>Prête à teindre (brute sablé et coin arrondie à la toupie ⅛”)</li>
+              </ul>
+          </li>
+
+          <li><strong>Avec Finition</strong>
+              <ul>
+                <li>Polyuréthane commerciale (mat ou satiné)</li>
+                <li>Color match + poly (mat ou satiné)</li>
+                <li>Huile commerciale sur bois naturel</li>
+              </ul>
+          </li>
+      </ul>
+  <strong>Services offerts</strong>
+  <ul>
+    <li>Prise de mesure et consultation gratuite en personne</li>
+    <li>Livraison possible partout au Québec</li>
+    <li>Installation : Nous faisons affaire avec des sous-contractants pour l'installation. Nous pouvons aussi vous référer à un entrepreneur de votre région</li> 
+    </ul>
+  <strong>Comformité</strong>
+  <p><br>Certaines épaisseurs ou dimensions pourraient ne pas respecter le code du bâtiment selon l’usage prévu (résidentiel, commercial, escaliers ouverts ou fermés). Il appartient au client de vérifier la conformité avant de passer sa commande.</p>
+  <p><br>Par défaut, nous proposons une marche de 11” afin de respecter les exigences du CNB 2015, soit un giron minimal de 10” avec un nez de marche de 1”. Il est possible de fabriquer en dehors de ces normes, mais les plans porteront alors la mention que l’escalier n’est pas conforme.</p>
+    `,
+        details: `<ul>
+    <li><strong>Largeurs standard</strong> : 36", 42", 48"</li>
+    <li><strong>Profondeur de marche standard</strong> : 11"</li>
+    <li><strong>Épaisseurs standard</strong> : 1-⅙”, 1-3/4", 2", 2-1/2", 3". Les épaisseurs de 2” et plus sont en collage.</li>
+    <li><strong>Coins</strong> : arrondis à ⅛” à la toupie.</li>
+  </ul>`,
+        finis: ` 
+
+  <strong>Éléments de Bois</strong><br>
+  <ul>
+  <li><strong>Brut</strong> : Bois nu sans finition, coupé aux dimensions.</li>
+
+
+  <li><strong>Prêt à teindre</strong> : Bois nu sans finition, coupé aux dimensions, sablé, avec coins arrondis 1/8".</li>
+
+
+  <li><strong>Laqué</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", application d’une laque (mat ou satiné) sur bois naturel.</li>
+
+
+  <li><strong>Teint (Color Match) + Laqué</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", bois teint (selon échantillon client) puis recouvert d’une laque claire (mat ou satiné).</li>
+
+
+  <li><strong>Huilé</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", finition huile claire mate sur bois naturel.</li>
+
+
+  </ul>
+  <strong>Éléments en Acier</strong> 
+  <ul><li><strong>Noir mat / Blanc mat</strong> : Peinture industrielle catalysée (mat ou satiné), appliquée au pistolet.</li></ul>
+  `,
+        faqs: `<section class="faq" id="faq">
+  <h2>FAQ</h2>
+  <div class="faq-container">
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Quel est le délai moyen de fabrication ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          4 à 6 semaines après validation du design et réception de l'acompte.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Livrez-vous partout au Québec ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          Oui, dans toute la province. Des frais peuvent s'appliquer selon la
+          région.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Proposez-vous l'installation ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>Oui, installation professionnelle par notre équipe certifiée.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Quel entretien pour un escalier métal‑bois ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          Entretien minimal : dépoussiérage pour le métal, traitement annuel
+          pour le bois.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Faites-vous la prise de mesures ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          <strong>Oui et non.</strong>
+
+          <br /><br />Notre vocation est celle de manufacturier de composantes
+          exclusivement. Ceci dit, nous pouvons référer un entrepreneur pour
+          faire le relevé des mesures nécessaires à la production de nos plans
+          de fabrication lorsque le projet est relativement simple et à une
+          distance raisonnable.
+
+          <br /><br />L’exactitude des mesures pour la fabrication reste
+          toutefois sous la responsabilité du client et/ou de son entrepreneur
+          et/ou de l’installateur. Nos plans de fabrication doivent être
+          vérifiés et approuvés puisque le chantier peut évoluer entre le relevé
+          et l’installation. Nous garantissons seulement la conception selon les
+          plans de fabrication approuvés.
+
+          <br /><br />Pour les clients qui sont à l’aise de mesurer eux-même,
+          nous avons facilité le travail pour notre clientèle. Nous vous
+          invitons à consulter notre guide pour la prise de mesures.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Pouvons-nous apporter notre bois ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          <strong> Normalement non.</strong>
+
+          <br /><br />La seule exception où nous accepterions de prendre du bois
+          de l’extérieur serait du bois séché au-préalable (pour garantir joints
+          et fini) et que nous avons vu/vérifié pour qu’il n’y ait pas
+          d’impuretés (vis, clous, etc..) qui pourraient endommager nos
+          équipements.
+
+          <br /><br />Le séchage à l’air prend environ 1 an par pouce
+          d’épaisseur. Le séchage au séchoir prend environ 1-3 mois mais est
+          très coûteux (plus que le prix du meuble) et la majorité des séchoirs
+          ont un volume minimum à respecter afin de prendre le mandat.
+
+          <br /><br />Assumant que ces conditions soient rencontrées, nous
+          pourrions en discuter. Autrement nous devrons malheureusement
+          décliner.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>`,
+      },
+      {
+        id: "p8d",
+        name: "Marches en Frêne",
+        category: "Marches",
+        base_price: 115,
+        colors: ["#f4e4c1"],
+        unit: "/marche",
+        image:
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68b09f9e588b867588991947.webp",
+        images: [
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68b09f9e588b867588991947.webp",
+        ],
+        options: ['36" de large', '42" de large', '48" de large'],
+        desc: `
+     <strong>Description</strong>
+Le frêne séduit par son contraste saisissant entre son cœur clair et ses veines prononcées aux teintes plus foncées. Son fil expressif, parfois légèrement ondulé, donne du mouvement et de la profondeur au bois. Résistant et polyvalent, le frêne allie beauté naturelle et robustesse, ce qui en fait un matériau aussi pratique qu’esthétique.
+  <br><br><strong>Finis disponibles</strong>
+      <ul>
+          <li><strong>Sans Finition</strong>
+              <ul>
+                <li>Brute (coupé à dimensions seulement)</li>
+                <li>Prête à teindre (brute sablé et coin arrondie à la toupie ⅛”)</li>
+              </ul>
+          </li>
+
+          <li><strong>Avec Finition</strong>
+              <ul>
+                <li>Polyuréthane commerciale (mat ou satiné)</li>
+                <li>Color match + poly (mat ou satiné)</li>
+                <li>Huile commerciale sur bois naturel</li>
+              </ul>
+          </li>
+      </ul>
+  <strong>Services offerts</strong>
+  <ul>
+    <li>Prise de mesure et consultation gratuite en personne</li>
+    <li>Livraison possible partout au Québec</li>
+    <li>Installation : Nous faisons affaire avec des sous-contractants pour l'installation. Nous pouvons aussi vous référer à un entrepreneur de votre région</li> 
+    </ul>
+  <strong>Comformité</strong>
+  <p><br>Certaines épaisseurs ou dimensions pourraient ne pas respecter le code du bâtiment selon l’usage prévu (résidentiel, commercial, escaliers ouverts ou fermés). Il appartient au client de vérifier la conformité avant de passer sa commande.</p>
+  <p><br>Par défaut, nous proposons une marche de 11” afin de respecter les exigences du CNB 2015, soit un giron minimal de 10” avec un nez de marche de 1”. Il est possible de fabriquer en dehors de ces normes, mais les plans porteront alors la mention que l’escalier n’est pas conforme.</p>
+    `,
+        details: `<ul>
+    <li><strong>Largeurs standard</strong> : 36", 42", 48"</li>
+    <li><strong>Profondeur de marche standard</strong> : 11"</li>
+    <li><strong>Épaisseurs standard</strong> : 1-⅙”, 1-3/4", 2", 2-1/2", 3". Les épaisseurs de 2” et plus sont en collage.</li>
+    <li><strong>Coins</strong> : arrondis à ⅛” à la toupie.</li>
+  </ul>`,
+        finis: ` 
+
+  <strong>Éléments de Bois</strong><br>
+  <ul>
+  <li><strong>Brut</strong> : Bois nu sans finition, coupé aux dimensions.</li>
+
+
+  <li><strong>Prêt à teindre</strong> : Bois nu sans finition, coupé aux dimensions, sablé, avec coins arrondis 1/8".</li>
+
+
+  <li><strong>Laqué</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", application d’une laque (mat ou satiné) sur bois naturel.</li>
+
+
+  <li><strong>Teint (Color Match) + Laqué</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", bois teint (selon échantillon client) puis recouvert d’une laque claire (mat ou satiné).</li>
+
+
+  <li><strong>Huilé</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", finition huile claire mate sur bois naturel.</li>
+
+
+  </ul>
+  <strong>Éléments en Acier</strong> 
+  <ul><li><strong>Noir mat / Blanc mat</strong> : Peinture industrielle catalysée (mat ou satiné), appliquée au pistolet.</li></ul>
+  `,
+        faqs: `<section class="faq" id="faq">
+  <h2>FAQ</h2>
+  <div class="faq-container">
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Quel est le délai moyen de fabrication ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          4 à 6 semaines après validation du design et réception de l'acompte.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Livrez-vous partout au Québec ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          Oui, dans toute la province. Des frais peuvent s'appliquer selon la
+          région.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Proposez-vous l'installation ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>Oui, installation professionnelle par notre équipe certifiée.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Quel entretien pour un escalier métal‑bois ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          Entretien minimal : dépoussiérage pour le métal, traitement annuel
+          pour le bois.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Faites-vous la prise de mesures ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          <strong>Oui et non.</strong>
+
+          <br /><br />Notre vocation est celle de manufacturier de composantes
+          exclusivement. Ceci dit, nous pouvons référer un entrepreneur pour
+          faire le relevé des mesures nécessaires à la production de nos plans
+          de fabrication lorsque le projet est relativement simple et à une
+          distance raisonnable.
+
+          <br /><br />L’exactitude des mesures pour la fabrication reste
+          toutefois sous la responsabilité du client et/ou de son entrepreneur
+          et/ou de l’installateur. Nos plans de fabrication doivent être
+          vérifiés et approuvés puisque le chantier peut évoluer entre le relevé
+          et l’installation. Nous garantissons seulement la conception selon les
+          plans de fabrication approuvés.
+
+          <br /><br />Pour les clients qui sont à l’aise de mesurer eux-même,
+          nous avons facilité le travail pour notre clientèle. Nous vous
+          invitons à consulter notre guide pour la prise de mesures.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Pouvons-nous apporter notre bois ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          <strong> Normalement non.</strong>
+
+          <br /><br />La seule exception où nous accepterions de prendre du bois
+          de l’extérieur serait du bois séché au-préalable (pour garantir joints
+          et fini) et que nous avons vu/vérifié pour qu’il n’y ait pas
+          d’impuretés (vis, clous, etc..) qui pourraient endommager nos
+          équipements.
+
+          <br /><br />Le séchage à l’air prend environ 1 an par pouce
+          d’épaisseur. Le séchage au séchoir prend environ 1-3 mois mais est
+          très coûteux (plus que le prix du meuble) et la majorité des séchoirs
+          ont un volume minimum à respecter afin de prendre le mandat.
+
+          <br /><br />Assumant que ces conditions soient rencontrées, nous
+          pourrions en discuter. Autrement nous devrons malheureusement
+          décliner.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>`,
+      },
+      {
+        id: "p8e",
+        name: "Marches en Merisier",
+        category: "Marches",
+        base_price: 140,
+        colors: ["#d2a679"],
+        unit: "/marche",
+        image:
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68b09fad81867d28e2ec996f.webp",
+        images: [
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68b09fad81867d28e2ec996f.webp",
+        ],
+        options: ['36" de large', '42" de large', '48" de large'],
+        desc: `
+     <strong>Description</strong>
+  Le merisier se distingue par ses magnifiques tons chauds naturels, évoluant du brun clair au rouge profond, avec une texture remarquablement uniforme et un grain fin. Ce bois noble apporte une élégance raffinée et crée une ambiance chaleureuse très accueillante, s'harmonisant parfaitement avec les styles contemporains et épurés.
+  <br><br><strong>Finis disponibles</strong>
+      <ul>
+          <li><strong>Sans Finition</strong>
+              <ul>
+                <li>Brute (coupé à dimensions seulement)</li>
+                <li>Prête à teindre (brute sablé et coin arrondie à la toupie ⅛”)</li>
+              </ul>
+          </li>
+
+          <li><strong>Avec Finition</strong>
+              <ul>
+                <li>Polyuréthane commerciale (mat ou satiné)</li>
+                <li>Color match + poly (mat ou satiné)</li>
+                <li>Huile commerciale sur bois naturel</li>
+              </ul>
+          </li>
+      </ul>
+  <strong>Services offerts</strong>
+  <ul>
+    <li>Prise de mesure et consultation gratuite en personne</li>
+    <li>Livraison possible partout au Québec</li>
+    <li>Installation : Nous faisons affaire avec des sous-contractants pour l'installation. Nous pouvons aussi vous référer à un entrepreneur de votre région</li> 
+    </ul>
+  <strong>Comformité</strong>
+  <p><br>Certaines épaisseurs ou dimensions pourraient ne pas respecter le code du bâtiment selon l’usage prévu (résidentiel, commercial, escaliers ouverts ou fermés). Il appartient au client de vérifier la conformité avant de passer sa commande.</p>
+  <p><br>Par défaut, nous proposons une marche de 11” afin de respecter les exigences du CNB 2015, soit un giron minimal de 10” avec un nez de marche de 1”. Il est possible de fabriquer en dehors de ces normes, mais les plans porteront alors la mention que l’escalier n’est pas conforme.</p>
+    `,
+        details: `<ul>
+    <li><strong>Largeurs standard</strong> : 36", 42", 48"</li>
+    <li><strong>Profondeur de marche standard</strong> : 11"</li>
+    <li><strong>Épaisseurs standard</strong> : 1-⅙”, 1-3/4", 2", 2-1/2", 3". Les épaisseurs de 2” et plus sont en collage.</li>
+    <li><strong>Coins</strong> : arrondis à ⅛” à la toupie.</li>
+  </ul>`,
+        finis: ` 
+
+  <strong>Éléments de Bois</strong><br>
+  <ul>
+  <li><strong>Brut</strong> : Bois nu sans finition, coupé aux dimensions.</li>
+
+
+  <li><strong>Prêt à teindre</strong> : Bois nu sans finition, coupé aux dimensions, sablé, avec coins arrondis 1/8".</li>
+
+
+  <li><strong>Laqué</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", application d’une laque (mat ou satiné) sur bois naturel.</li>
+
+
+  <li><strong>Teint (Color Match) + Laqué</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", bois teint (selon échantillon client) puis recouvert d’une laque claire (mat ou satiné).</li>
+
+
+  <li><strong>Huilé</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", finition huile claire mate sur bois naturel.</li>
+
+
+  </ul>
+  <strong>Éléments en Acier</strong> 
+  <ul><li><strong>Noir mat / Blanc mat</strong> : Peinture industrielle catalysée (mat ou satiné), appliquée au pistolet.</li></ul>
+  `,
+        faqs: `<section class="faq" id="faq">
+  <h2>FAQ</h2>
+  <div class="faq-container">
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Quel est le délai moyen de fabrication ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          4 à 6 semaines après validation du design et réception de l'acompte.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Livrez-vous partout au Québec ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          Oui, dans toute la province. Des frais peuvent s'appliquer selon la
+          région.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Proposez-vous l'installation ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>Oui, installation professionnelle par notre équipe certifiée.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Quel entretien pour un escalier métal‑bois ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          Entretien minimal : dépoussiérage pour le métal, traitement annuel
+          pour le bois.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Faites-vous la prise de mesures ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          <strong>Oui et non.</strong>
+
+          <br /><br />Notre vocation est celle de manufacturier de composantes
+          exclusivement. Ceci dit, nous pouvons référer un entrepreneur pour
+          faire le relevé des mesures nécessaires à la production de nos plans
+          de fabrication lorsque le projet est relativement simple et à une
+          distance raisonnable.
+
+          <br /><br />L’exactitude des mesures pour la fabrication reste
+          toutefois sous la responsabilité du client et/ou de son entrepreneur
+          et/ou de l’installateur. Nos plans de fabrication doivent être
+          vérifiés et approuvés puisque le chantier peut évoluer entre le relevé
+          et l’installation. Nous garantissons seulement la conception selon les
+          plans de fabrication approuvés.
+
+          <br /><br />Pour les clients qui sont à l’aise de mesurer eux-même,
+          nous avons facilité le travail pour notre clientèle. Nous vous
+          invitons à consulter notre guide pour la prise de mesures.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Pouvons-nous apporter notre bois ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          <strong> Normalement non.</strong>
+
+          <br /><br />La seule exception où nous accepterions de prendre du bois
+          de l’extérieur serait du bois séché au-préalable (pour garantir joints
+          et fini) et que nous avons vu/vérifié pour qu’il n’y ait pas
+          d’impuretés (vis, clous, etc..) qui pourraient endommager nos
+          équipements.
+
+          <br /><br />Le séchage à l’air prend environ 1 an par pouce
+          d’épaisseur. Le séchage au séchoir prend environ 1-3 mois mais est
+          très coûteux (plus que le prix du meuble) et la majorité des séchoirs
+          ont un volume minimum à respecter afin de prendre le mandat.
+
+          <br /><br />Assumant que ces conditions soient rencontrées, nous
+          pourrions en discuter. Autrement nous devrons malheureusement
+          décliner.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>`,
+      },
+      {
+        id: "p9",
+        name: "Garde-corps - Tubes horizontaux",
+        category: "Garde-corps",
+        base_price: 200,
+        colors: ["#000"],
+        unit: "/pied linéaire",
+        image:
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68b0a068621e119eb567468e.webp",
+        images: [
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68b0a068621e119eb567468e.webp",
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68b0a068d7b73201405cf5fc.webp",
+        ],
+        options: ["3 tubes", "4 tubes", "5 tubes", "Avec main courante bois"],
+        desc: `
+         <strong>Description</strong>
+     <ul>
+                <li>Prix au pied linéaire</li>
+                <li>Main courante disponible en bois  2-1/2" x 1-1/2", en tube d'acier HSS 3" x 1" ou 1-½”x1-½”</li>
+                <li>Pour le métal, peinture à époxy industrielle mate de haute qualité résistante à l'usure.</li>
+          </ul>
+  <strong>Finis disponibles pour les mains courantes en bois:</strong>
+      <ul>
+          <li><strong>Sans Finition</strong>
+              <ul>
+                <li>Brute (coupé à dimensions seulement)</li>
+                <li>Prête à teindre (brute sablé et coin arrondie à la toupie ⅛”)</li>
+              </ul>
+          </li>
+
+          <li><strong>Avec Finition</strong>
+              <ul>
+                <li>Polyuréthane commerciale (mat ou satiné)</li>
+                <li>Color match + poly (mat ou satiné)</li>
+                <li>Huile commerciale sur bois naturel</li>
+              </ul>
+          </li>
+      </ul>
+  <strong>Services offerts</strong>
+  <ul>
+    <li>Prise de mesure et consultation gratuite en personne</li>
+    <li>Livraison possible partout au Québec</li>
+    <li>Installation : Nous faisons affaire avec des sous-contractants pour l'installation. Nous pouvons aussi vous référer à un entrepreneur de votre région</li> 
+  </ul>
+<strong>Note</strong> : Toute modification apportée au plan sera facturée au tarif de 125$ de l'heure pour la conception.`,
+        details: `
+        <strong>Spécifications techniques pour garde-corps </strong>
+        <ul>
+    <li><strong>Hauteur résidentielle</strong> : 36" (aussi disponible pour du 42")</li>
+    <li><strong>Poteaux de début/centre/fin</strong> :  acier HSS 1-1/2" x 1-1/2"</li>
+    <li><strong>Tiges Horizontales</strong> : acier HSS 1/2" x 1/2" (maximum 4"/100mm entre les tiges)</li>
+    <li><strong>Garde corp sécuritaire</strong> : Fixations renforcées pour sécurité maximale</li>
+    <li><strong>Construction</strong> : Acier de qualité supérieure avec soudures professionnelles </li>
+  </ul>`,
+        finis: ` 
+
+  <strong>Éléments de Bois</strong><br>
+  <ul>
+  <li><strong>Brut</strong> : Bois nu sans finition, coupé aux dimensions.</li>
+
+
+  <li><strong>Prêt à teindre</strong> : Bois nu sans finition, coupé aux dimensions, sablé, avec coins arrondis 1/8".</li>
+
+
+  <li><strong>Laqué</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", application d’une laque (mat ou satiné) sur bois naturel.</li>
+
+
+  <li><strong>Teint (Color Match) + Laqué</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", bois teint (selon échantillon client) puis recouvert d’une laque claire (mat ou satiné).</li>
+
+
+  <li><strong>Huilé</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", finition huile claire mate sur bois naturel.</li>
+
+
+  </ul>
+  <strong>Éléments en Acier</strong> 
+  <ul><li><strong>Noir mat / Blanc mat</strong> : Peinture industrielle catalysée (mat ou satiné), appliquée au pistolet.</li></ul>
+  `,
+        faqs: `<section class="faq" id="faq">
+  <h2>FAQ</h2>
+  <div class="faq-container">
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Quel est le délai moyen de fabrication ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          4 à 6 semaines après validation du design et réception de l'acompte.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Livrez-vous partout au Québec ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          Oui, dans toute la province. Des frais peuvent s'appliquer selon la
+          région.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Proposez-vous l'installation ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>Oui, installation professionnelle par notre équipe certifiée.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Quel entretien pour un escalier métal‑bois ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          Entretien minimal : dépoussiérage pour le métal, traitement annuel
+          pour le bois.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Faites-vous la prise de mesures ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          <strong>Oui et non.</strong>
+
+          <br /><br />Notre vocation est celle de manufacturier de composantes
+          exclusivement. Ceci dit, nous pouvons référer un entrepreneur pour
+          faire le relevé des mesures nécessaires à la production de nos plans
+          de fabrication lorsque le projet est relativement simple et à une
+          distance raisonnable.
+
+          <br /><br />L’exactitude des mesures pour la fabrication reste
+          toutefois sous la responsabilité du client et/ou de son entrepreneur
+          et/ou de l’installateur. Nos plans de fabrication doivent être
+          vérifiés et approuvés puisque le chantier peut évoluer entre le relevé
+          et l’installation. Nous garantissons seulement la conception selon les
+          plans de fabrication approuvés.
+
+          <br /><br />Pour les clients qui sont à l’aise de mesurer eux-même,
+          nous avons facilité le travail pour notre clientèle. Nous vous
+          invitons à consulter notre guide pour la prise de mesures.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Pouvons-nous apporter notre bois ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          <strong> Normalement non.</strong>
+
+          <br /><br />La seule exception où nous accepterions de prendre du bois
+          de l’extérieur serait du bois séché au-préalable (pour garantir joints
+          et fini) et que nous avons vu/vérifié pour qu’il n’y ait pas
+          d’impuretés (vis, clous, etc..) qui pourraient endommager nos
+          équipements.
+
+          <br /><br />Le séchage à l’air prend environ 1 an par pouce
+          d’épaisseur. Le séchage au séchoir prend environ 1-3 mois mais est
+          très coûteux (plus que le prix du meuble) et la majorité des séchoirs
+          ont un volume minimum à respecter afin de prendre le mandat.
+
+          <br /><br />Assumant que ces conditions soient rencontrées, nous
+          pourrions en discuter. Autrement nous devrons malheureusement
+          décliner.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>`,
+      },
+      {
+        id: "p10",
+        name: "Garde-corps - Tubes verticaux",
+        category: "Garde-corps",
+        base_price: 230,
+        colors: ["#000"],
+        unit: "/pied linéaire",
+        image:
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68b0a0856658390f919eb127.webp",
+        images: [
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68b0a0856658390f919eb127.webp",
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68b0a08509ec2517fd9388bd.webp",
+        ],
+        options: [
+          'Barreaux ½"',
+          'Barreaux ⅝"',
+          'Barreaux ¾"',
+          "Avec main courante bois",
+        ],
+        desc: `
+         <strong>Description</strong>
+     <ul>
+                <li>Prix au pied linéaire</li>
+                <li>Main courante disponible en bois  2-1/2" x 1-1/2", en tube d'acier HSS 3" x 1" ou 1-½”x1-½”</li>
+                <li>Pour le métal, peinture à époxy industrielle mate de haute qualité résistante à l'usure.</li>
+          </ul>
+  <strong>Finis disponibles pour les mains courantes en bois:</strong>
+      <ul>
+          <li><strong>Sans Finition</strong>
+              <ul>
+                <li>Brute (coupé à dimensions seulement)</li>
+                <li>Prête à teindre (brute sablé et coin arrondie à la toupie ⅛”)</li>
+              </ul>
+          </li>
+
+          <li><strong>Avec Finition</strong>
+              <ul>
+                <li>Polyuréthane commerciale (mat ou satiné)</li>
+                <li>Color match + poly (mat ou satiné)</li>
+                <li>Huile commerciale sur bois naturel</li>
+              </ul>
+          </li>
+      </ul>
+  <strong>Services offerts</strong>
+  <ul>
+    <li>Prise de mesure et consultation gratuite en personne</li>
+    <li>Livraison possible partout au Québec</li>
+    <li>Installation : Nous faisons affaire avec des sous-contractants pour l'installation. Nous pouvons aussi vous référer à un entrepreneur de votre région</li> 
+  </ul>
+<strong>Note</strong> : Toute modification apportée au plan sera facturée au tarif de 125$ de l'heure pour la conception.`,
+        details: `
+        <strong>Spécifications techniques pour garde-corps </strong>
+        <ul>
+    <li><strong>Hauteur résidentielle</strong> : 36" (aussi disponible pour du 42")</li>
+    <li><strong>Poteaux de début/centre/fin</strong> :  acier HSS 1-1/2" x 1-1/2"</li>
+    <li><strong>Tiges Horizontales</strong> : acier HSS 1/2" x 1/2" (maximum 4"/100mm entre les tiges)</li>
+    <li><strong>Garde corp sécuritaire</strong> : Fixations renforcées pour sécurité maximale</li>
+    <li><strong>Construction</strong> : Acier de qualité supérieure avec soudures professionnelles </li>
+  </ul>`,
+        finis: ` 
+
+  <strong>Éléments de Bois</strong><br>
+  <ul>
+  <li><strong>Brut</strong> : Bois nu sans finition, coupé aux dimensions.</li>
+
+
+  <li><strong>Prêt à teindre</strong> : Bois nu sans finition, coupé aux dimensions, sablé, avec coins arrondis 1/8".</li>
+
+
+  <li><strong>Laqué</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", application d’une laque (mat ou satiné) sur bois naturel.</li>
+
+
+  <li><strong>Teint (Color Match) + Laqué</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", bois teint (selon échantillon client) puis recouvert d’une laque claire (mat ou satiné).</li>
+
+
+  <li><strong>Huilé</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", finition huile claire mate sur bois naturel.</li>
+
+
+  </ul>
+  <strong>Éléments en Acier</strong> 
+  <ul><li><strong>Noir mat / Blanc mat</strong> : Peinture industrielle catalysée (mat ou satiné), appliquée au pistolet.</li></ul>
+  `,
+        faqs: `<section class="faq" id="faq">
+  <h2>FAQ</h2>
+  <div class="faq-container">
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Quel est le délai moyen de fabrication ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          4 à 6 semaines après validation du design et réception de l'acompte.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Livrez-vous partout au Québec ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          Oui, dans toute la province. Des frais peuvent s'appliquer selon la
+          région.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Proposez-vous l'installation ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>Oui, installation professionnelle par notre équipe certifiée.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Quel entretien pour un escalier métal‑bois ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          Entretien minimal : dépoussiérage pour le métal, traitement annuel
+          pour le bois.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Faites-vous la prise de mesures ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          <strong>Oui et non.</strong>
+
+          <br /><br />Notre vocation est celle de manufacturier de composantes
+          exclusivement. Ceci dit, nous pouvons référer un entrepreneur pour
+          faire le relevé des mesures nécessaires à la production de nos plans
+          de fabrication lorsque le projet est relativement simple et à une
+          distance raisonnable.
+
+          <br /><br />L’exactitude des mesures pour la fabrication reste
+          toutefois sous la responsabilité du client et/ou de son entrepreneur
+          et/ou de l’installateur. Nos plans de fabrication doivent être
+          vérifiés et approuvés puisque le chantier peut évoluer entre le relevé
+          et l’installation. Nous garantissons seulement la conception selon les
+          plans de fabrication approuvés.
+
+          <br /><br />Pour les clients qui sont à l’aise de mesurer eux-même,
+          nous avons facilité le travail pour notre clientèle. Nous vous
+          invitons à consulter notre guide pour la prise de mesures.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Pouvons-nous apporter notre bois ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          <strong> Normalement non.</strong>
+
+          <br /><br />La seule exception où nous accepterions de prendre du bois
+          de l’extérieur serait du bois séché au-préalable (pour garantir joints
+          et fini) et que nous avons vu/vérifié pour qu’il n’y ait pas
+          d’impuretés (vis, clous, etc..) qui pourraient endommager nos
+          équipements.
+
+          <br /><br />Le séchage à l’air prend environ 1 an par pouce
+          d’épaisseur. Le séchage au séchoir prend environ 1-3 mois mais est
+          très coûteux (plus que le prix du meuble) et la majorité des séchoirs
+          ont un volume minimum à respecter afin de prendre le mandat.
+
+          <br /><br />Assumant que ces conditions soient rencontrées, nous
+          pourrions en discuter. Autrement nous devrons malheureusement
+          décliner.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>`,
+      },
+      {
+        id: "p11",
+        name: "Garde-corps - Vertical 2up",
+        category: "Garde-corps",
+        base_price: 395,
+        colors: ["#000"],
+        unit: "/pied linéaire",
+        image:
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68b0a0b30b7a45e622314b7f.webp",
+        images: [
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68b0a0b30b7a45e622314b7f.webp",
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68b0a0b381867d5f72ecbecf.webp",
+        ],
+        options: ["Standard", "Avec main courante bois", "Barreaux alternés"],
+        desc: `
+         <strong>Description</strong>
+     <ul>
+                <li>Prix au pied linéaire</li>
+                <li>Main courante disponible en bois  2-1/2" x 1-1/2", en tube d'acier HSS 3" x 1" ou 1-½”x1-½”</li>
+                <li>Pour le métal, peinture à époxy industrielle mate de haute qualité résistante à l'usure.</li>
+          </ul>
+  <strong>Finis disponibles pour les mains courantes en bois:</strong>
+      <ul>
+          <li><strong>Sans Finition</strong>
+              <ul>
+                <li>Brute (coupé à dimensions seulement)</li>
+                <li>Prête à teindre (brute sablé et coin arrondie à la toupie ⅛”)</li>
+              </ul>
+          </li>
+
+          <li><strong>Avec Finition</strong>
+              <ul>
+                <li>Polyuréthane commerciale (mat ou satiné)</li>
+                <li>Color match + poly (mat ou satiné)</li>
+                <li>Huile commerciale sur bois naturel</li>
+              </ul>
+          </li>
+      </ul>
+  <strong>Services offerts</strong>
+  <ul>
+    <li>Prise de mesure et consultation gratuite en personne</li>
+    <li>Livraison possible partout au Québec</li>
+    <li>Installation : Nous faisons affaire avec des sous-contractants pour l'installation. Nous pouvons aussi vous référer à un entrepreneur de votre région</li> 
+  </ul>
+<strong>Note</strong> : Toute modification apportée au plan sera facturée au tarif de 125$ de l'heure pour la conception.`,
+        details: `
+        <strong>Spécifications techniques pour garde-corps </strong>
+        <ul>
+    <li><strong>Hauteur résidentielle</strong> : 36" (aussi disponible pour du 42")</li>
+    <li><strong>Poteaux de début/centre/fin</strong> :  acier HSS 1-1/2" x 1-1/2"</li>
+    <li><strong>Tiges Horizontales</strong> : acier HSS 1/2" x 1/2" (maximum 4"/100mm entre les tiges)</li>
+    <li><strong>Garde corp sécuritaire</strong> : Fixations renforcées pour sécurité maximale</li>
+    <li><strong>Construction</strong> : Acier de qualité supérieure avec soudures professionnelles </li>
+  </ul>`,
+        finis: ` 
+
+  <strong>Éléments de Bois</strong><br>
+  <ul>
+  <li><strong>Brut</strong> : Bois nu sans finition, coupé aux dimensions.</li>
+
+
+  <li><strong>Prêt à teindre</strong> : Bois nu sans finition, coupé aux dimensions, sablé, avec coins arrondis 1/8".</li>
+
+
+  <li><strong>Laqué</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", application d’une laque (mat ou satiné) sur bois naturel.</li>
+
+
+  <li><strong>Teint (Color Match) + Laqué</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", bois teint (selon échantillon client) puis recouvert d’une laque claire (mat ou satiné).</li>
+
+
+  <li><strong>Huilé</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", finition huile claire mate sur bois naturel.</li>
+
+
+  </ul>
+  <strong>Éléments en Acier</strong> 
+  <ul><li><strong>Noir mat / Blanc mat</strong> : Peinture industrielle catalysée (mat ou satiné), appliquée au pistolet.</li></ul>
+  `,
+        faqs: `<section class="faq" id="faq">
+  <h2>FAQ</h2>
+  <div class="faq-container">
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Quel est le délai moyen de fabrication ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          4 à 6 semaines après validation du design et réception de l'acompte.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Livrez-vous partout au Québec ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          Oui, dans toute la province. Des frais peuvent s'appliquer selon la
+          région.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Proposez-vous l'installation ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>Oui, installation professionnelle par notre équipe certifiée.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Quel entretien pour un escalier métal‑bois ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          Entretien minimal : dépoussiérage pour le métal, traitement annuel
+          pour le bois.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Faites-vous la prise de mesures ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          <strong>Oui et non.</strong>
+
+          <br /><br />Notre vocation est celle de manufacturier de composantes
+          exclusivement. Ceci dit, nous pouvons référer un entrepreneur pour
+          faire le relevé des mesures nécessaires à la production de nos plans
+          de fabrication lorsque le projet est relativement simple et à une
+          distance raisonnable.
+
+          <br /><br />L’exactitude des mesures pour la fabrication reste
+          toutefois sous la responsabilité du client et/ou de son entrepreneur
+          et/ou de l’installateur. Nos plans de fabrication doivent être
+          vérifiés et approuvés puisque le chantier peut évoluer entre le relevé
+          et l’installation. Nous garantissons seulement la conception selon les
+          plans de fabrication approuvés.
+
+          <br /><br />Pour les clients qui sont à l’aise de mesurer eux-même,
+          nous avons facilité le travail pour notre clientèle. Nous vous
+          invitons à consulter notre guide pour la prise de mesures.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Pouvons-nous apporter notre bois ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          <strong> Normalement non.</strong>
+
+          <br /><br />La seule exception où nous accepterions de prendre du bois
+          de l’extérieur serait du bois séché au-préalable (pour garantir joints
+          et fini) et que nous avons vu/vérifié pour qu’il n’y ait pas
+          d’impuretés (vis, clous, etc..) qui pourraient endommager nos
+          équipements.
+
+          <br /><br />Le séchage à l’air prend environ 1 an par pouce
+          d’épaisseur. Le séchage au séchoir prend environ 1-3 mois mais est
+          très coûteux (plus que le prix du meuble) et la majorité des séchoirs
+          ont un volume minimum à respecter afin de prendre le mandat.
+
+          <br /><br />Assumant que ces conditions soient rencontrées, nous
+          pourrions en discuter. Autrement nous devrons malheureusement
+          décliner.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>`,
+      },
+      {
+        id: "p12",
+        name: "Garde-corps - Horizontal Flatbar",
+        category: "Garde-corps",
+        base_price: 320,
+        colors: ["#000"],
+        unit: "/pied linéaire",
+        image:
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68b0a0d10b7a455d873150c1.webp",
+        images: [
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68b0a0d10b7a455d873150c1.webp",
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68b0a0d181867d309fecc71f.webp",
+        ],
+        options: [
+          "3 flat bars",
+          "4 flat bars",
+          "5 flat bars",
+          "Avec main courante bois",
+        ],
+        desc: `
+         <strong>Description</strong>
+     <ul>
+                <li>Prix au pied linéaire</li>
+                <li>Main courante disponible en bois  2-1/2" x 1-1/2", en tube d'acier HSS 3" x 1" ou 1-½”x1-½”</li>
+                <li>Pour le métal, peinture à époxy industrielle mate de haute qualité résistante à l'usure.</li>
+          </ul>
+  <strong>Finis disponibles pour les mains courantes en bois:</strong>
+      <ul>
+          <li><strong>Sans Finition</strong>
+              <ul>
+                <li>Brute (coupé à dimensions seulement)</li>
+                <li>Prête à teindre (brute sablé et coin arrondie à la toupie ⅛”)</li>
+              </ul>
+          </li>
+
+          <li><strong>Avec Finition</strong>
+              <ul>
+                <li>Polyuréthane commerciale (mat ou satiné)</li>
+                <li>Color match + poly (mat ou satiné)</li>
+                <li>Huile commerciale sur bois naturel</li>
+              </ul>
+          </li>
+      </ul>
+  <strong>Services offerts</strong>
+  <ul>
+    <li>Prise de mesure et consultation gratuite en personne</li>
+    <li>Livraison possible partout au Québec</li>
+    <li>Installation : Nous faisons affaire avec des sous-contractants pour l'installation. Nous pouvons aussi vous référer à un entrepreneur de votre région</li> 
+  </ul>
+<strong>Note</strong> : Toute modification apportée au plan sera facturée au tarif de 125$ de l'heure pour la conception.`,
+        details: `
+        <strong>Spécifications techniques pour garde-corps </strong>
+        <ul>
+    <li><strong>Hauteur résidentielle</strong> : 36" (aussi disponible pour du 42")</li>
+    <li><strong>Poteaux de début/centre/fin</strong> :  acier HSS 1-1/2" x 1-1/2"</li>
+    <li><strong>Tiges Horizontales</strong> : acier HSS 1/2" x 1/2" (maximum 4"/100mm entre les tiges)</li>
+    <li><strong>Garde corp sécuritaire</strong> : Fixations renforcées pour sécurité maximale</li>
+    <li><strong>Construction</strong> : Acier de qualité supérieure avec soudures professionnelles </li>
+  </ul>`,
+        finis: ` 
+
+  <strong>Éléments de Bois</strong><br>
+  <ul>
+  <li><strong>Brut</strong> : Bois nu sans finition, coupé aux dimensions.</li>
+
+
+  <li><strong>Prêt à teindre</strong> : Bois nu sans finition, coupé aux dimensions, sablé, avec coins arrondis 1/8".</li>
+
+
+  <li><strong>Laqué</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", application d’une laque (mat ou satiné) sur bois naturel.</li>
+
+
+  <li><strong>Teint (Color Match) + Laqué</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", bois teint (selon échantillon client) puis recouvert d’une laque claire (mat ou satiné).</li>
+
+
+  <li><strong>Huilé</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", finition huile claire mate sur bois naturel.</li>
+
+
+  </ul>
+  <strong>Éléments en Acier</strong> 
+  <ul><li><strong>Noir mat / Blanc mat</strong> : Peinture industrielle catalysée (mat ou satiné), appliquée au pistolet.</li></ul>
+  `,
+        faqs: `<section class="faq" id="faq">
+  <h2>FAQ</h2>
+  <div class="faq-container">
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Quel est le délai moyen de fabrication ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          4 à 6 semaines après validation du design et réception de l'acompte.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Livrez-vous partout au Québec ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          Oui, dans toute la province. Des frais peuvent s'appliquer selon la
+          région.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Proposez-vous l'installation ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>Oui, installation professionnelle par notre équipe certifiée.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Quel entretien pour un escalier métal‑bois ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          Entretien minimal : dépoussiérage pour le métal, traitement annuel
+          pour le bois.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Faites-vous la prise de mesures ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          <strong>Oui et non.</strong>
+
+          <br /><br />Notre vocation est celle de manufacturier de composantes
+          exclusivement. Ceci dit, nous pouvons référer un entrepreneur pour
+          faire le relevé des mesures nécessaires à la production de nos plans
+          de fabrication lorsque le projet est relativement simple et à une
+          distance raisonnable.
+
+          <br /><br />L’exactitude des mesures pour la fabrication reste
+          toutefois sous la responsabilité du client et/ou de son entrepreneur
+          et/ou de l’installateur. Nos plans de fabrication doivent être
+          vérifiés et approuvés puisque le chantier peut évoluer entre le relevé
+          et l’installation. Nous garantissons seulement la conception selon les
+          plans de fabrication approuvés.
+
+          <br /><br />Pour les clients qui sont à l’aise de mesurer eux-même,
+          nous avons facilité le travail pour notre clientèle. Nous vous
+          invitons à consulter notre guide pour la prise de mesures.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Pouvons-nous apporter notre bois ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          <strong> Normalement non.</strong>
+
+          <br /><br />La seule exception où nous accepterions de prendre du bois
+          de l’extérieur serait du bois séché au-préalable (pour garantir joints
+          et fini) et que nous avons vu/vérifié pour qu’il n’y ait pas
+          d’impuretés (vis, clous, etc..) qui pourraient endommager nos
+          équipements.
+
+          <br /><br />Le séchage à l’air prend environ 1 an par pouce
+          d’épaisseur. Le séchage au séchoir prend environ 1-3 mois mais est
+          très coûteux (plus que le prix du meuble) et la majorité des séchoirs
+          ont un volume minimum à respecter afin de prendre le mandat.
+
+          <br /><br />Assumant que ces conditions soient rencontrées, nous
+          pourrions en discuter. Autrement nous devrons malheureusement
+          décliner.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>`,
+      },
+      {
+        id: "p13",
+        name: "Main courante - Acier",
+        category: "Main courante",
+        base_price: 60,
+        colors: ["#000"],
+        unit: "/pied linéaire",
+        image:
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68b0a0ec0b7a4524813153f8.webp",
+        images: [
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68b0a0ec0b7a4524813153f8.webp",
+        ],
+        options: ['Tube rond 1½"', 'Tube carré 1½"', 'Flat bar 2" x ¼"'],
+        desc: `
+         <strong>Description</strong>
+     <ul>
+                <li>Prix au pied linéaire</li>
+                <li>Main courante disponible en bois  2-1/2" x 1-1/2", en tube d'acier HSS 3" x 1" ou 1-½”x1-½”</li>
+                <li>Pour le métal, peinture à époxy industrielle mate de haute qualité résistante à l'usure.</li>
+          </ul>
+  <strong>Finis disponibles pour les mains courantes en bois:</strong>
+      <ul>
+          <li><strong>Sans Finition</strong>
+              <ul>
+                <li>Brute (coupé à dimensions seulement)</li>
+                <li>Prête à teindre (brute sablé et coin arrondie à la toupie ⅛”)</li>
+              </ul>
+          </li>
+
+          <li><strong>Avec Finition</strong>
+              <ul>
+                <li>Polyuréthane commerciale (mat ou satiné)</li>
+                <li>Color match + poly (mat ou satiné)</li>
+                <li>Huile commerciale sur bois naturel</li>
+              </ul>
+          </li>
+      </ul>
+  <strong>Services offerts</strong>
+  <ul>
+    <li>Prise de mesure et consultation gratuite en personne</li>
+    <li>Livraison possible partout au Québec</li>
+    <li>Installation : Nous faisons affaire avec des sous-contractants pour l'installation. Nous pouvons aussi vous référer à un entrepreneur de votre région</li> 
+  </ul>
+<strong>Note</strong> : Toute modification apportée au plan sera facturée au tarif de 125$ de l'heure pour la conception.`,
+        details: `
+        <strong>Spécifications techniques pour garde-corps </strong>
+        <ul>
+    <li><strong>Hauteur résidentielle</strong> : 36" (aussi disponible pour du 42")</li>
+    <li><strong>Poteaux de début/centre/fin</strong> :  acier HSS 1-1/2" x 1-1/2"</li>
+    <li><strong>Tiges Horizontales</strong> : acier HSS 1/2" x 1/2" (maximum 4"/100mm entre les tiges)</li>
+    <li><strong>Garde corp sécuritaire</strong> : Fixations renforcées pour sécurité maximale</li>
+    <li><strong>Construction</strong> : Acier de qualité supérieure avec soudures professionnelles </li>
+  </ul>`,
+        finis: ` 
+
+  <strong>Éléments de Bois</strong><br>
+  <ul>
+  <li><strong>Brut</strong> : Bois nu sans finition, coupé aux dimensions.</li>
+
+
+  <li><strong>Prêt à teindre</strong> : Bois nu sans finition, coupé aux dimensions, sablé, avec coins arrondis 1/8".</li>
+
+
+  <li><strong>Laqué</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", application d’une laque (mat ou satiné) sur bois naturel.</li>
+
+
+  <li><strong>Teint (Color Match) + Laqué</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", bois teint (selon échantillon client) puis recouvert d’une laque claire (mat ou satiné).</li>
+
+
+  <li><strong>Huilé</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", finition huile claire mate sur bois naturel.</li>
+
+
+  </ul>
+  <strong>Éléments en Acier</strong> 
+  <ul><li><strong>Noir mat / Blanc mat</strong> : Peinture industrielle catalysée (mat ou satiné), appliquée au pistolet.</li></ul>
+  `,
+        faqs: `<section class="faq" id="faq">
+  <h2>FAQ</h2>
+  <div class="faq-container">
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Quel est le délai moyen de fabrication ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          4 à 6 semaines après validation du design et réception de l'acompte.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Livrez-vous partout au Québec ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          Oui, dans toute la province. Des frais peuvent s'appliquer selon la
+          région.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Proposez-vous l'installation ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>Oui, installation professionnelle par notre équipe certifiée.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Quel entretien pour un escalier métal‑bois ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          Entretien minimal : dépoussiérage pour le métal, traitement annuel
+          pour le bois.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Faites-vous la prise de mesures ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          <strong>Oui et non.</strong>
+
+          <br /><br />Notre vocation est celle de manufacturier de composantes
+          exclusivement. Ceci dit, nous pouvons référer un entrepreneur pour
+          faire le relevé des mesures nécessaires à la production de nos plans
+          de fabrication lorsque le projet est relativement simple et à une
+          distance raisonnable.
+
+          <br /><br />L’exactitude des mesures pour la fabrication reste
+          toutefois sous la responsabilité du client et/ou de son entrepreneur
+          et/ou de l’installateur. Nos plans de fabrication doivent être
+          vérifiés et approuvés puisque le chantier peut évoluer entre le relevé
+          et l’installation. Nous garantissons seulement la conception selon les
+          plans de fabrication approuvés.
+
+          <br /><br />Pour les clients qui sont à l’aise de mesurer eux-même,
+          nous avons facilité le travail pour notre clientèle. Nous vous
+          invitons à consulter notre guide pour la prise de mesures.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Pouvons-nous apporter notre bois ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          <strong> Normalement non.</strong>
+
+          <br /><br />La seule exception où nous accepterions de prendre du bois
+          de l’extérieur serait du bois séché au-préalable (pour garantir joints
+          et fini) et que nous avons vu/vérifié pour qu’il n’y ait pas
+          d’impuretés (vis, clous, etc..) qui pourraient endommager nos
+          équipements.
+
+          <br /><br />Le séchage à l’air prend environ 1 an par pouce
+          d’épaisseur. Le séchage au séchoir prend environ 1-3 mois mais est
+          très coûteux (plus que le prix du meuble) et la majorité des séchoirs
+          ont un volume minimum à respecter afin de prendre le mandat.
+
+          <br /><br />Assumant que ces conditions soient rencontrées, nous
+          pourrions en discuter. Autrement nous devrons malheureusement
+          décliner.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>`,
+      },
+      {
+        id: "p14",
+        name: "Main courante - Acier avec bois",
+        category: "Main courante",
+        base_price: 195,
+        colors: ["#000", "#d7b892"],
+        unit: "/pied linéaire",
+        image:
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68b0a0fd6997402bd96ea3dd.webp",
+        images: [
+          "https://storage.googleapis.com/msgsndr/sCtBisO8EbDycQc8Ce6b/media/68b0a0fd6997402bd96ea3dd.webp",
+        ],
+        options: ["Chêne", "Érable", "Frêne", "Merisier"],
+        desc: `
+         <strong>Description</strong>
+     <ul>
+                <li>Prix au pied linéaire</li>
+                <li>Main courante disponible en bois  2-1/2" x 1-1/2", en tube d'acier HSS 3" x 1" ou 1-½”x1-½”</li>
+                <li>Pour le métal, peinture à époxy industrielle mate de haute qualité résistante à l'usure.</li>
+          </ul>
+  <strong>Finis disponibles pour les mains courantes en bois:</strong>
+      <ul>
+          <li><strong>Sans Finition</strong>
+              <ul>
+                <li>Brute (coupé à dimensions seulement)</li>
+                <li>Prête à teindre (brute sablé et coin arrondie à la toupie ⅛”)</li>
+              </ul>
+          </li>
+
+          <li><strong>Avec Finition</strong>
+              <ul>
+                <li>Polyuréthane commerciale (mat ou satiné)</li>
+                <li>Color match + poly (mat ou satiné)</li>
+                <li>Huile commerciale sur bois naturel</li>
+              </ul>
+          </li>
+      </ul>
+  <strong>Services offerts</strong>
+  <ul>
+    <li>Prise de mesure et consultation gratuite en personne</li>
+    <li>Livraison possible partout au Québec</li>
+    <li>Installation : Nous faisons affaire avec des sous-contractants pour l'installation. Nous pouvons aussi vous référer à un entrepreneur de votre région</li> 
+  </ul>
+<strong>Note</strong> : Toute modification apportée au plan sera facturée au tarif de 125$ de l'heure pour la conception.`,
+        details: `
+        <strong>Spécifications techniques pour garde-corps </strong>
+        <ul>
+    <li><strong>Hauteur résidentielle</strong> : 36" (aussi disponible pour du 42")</li>
+    <li><strong>Poteaux de début/centre/fin</strong> :  acier HSS 1-1/2" x 1-1/2"</li>
+    <li><strong>Tiges Horizontales</strong> : acier HSS 1/2" x 1/2" (maximum 4"/100mm entre les tiges)</li>
+    <li><strong>Garde corp sécuritaire</strong> : Fixations renforcées pour sécurité maximale</li>
+    <li><strong>Construction</strong> : Acier de qualité supérieure avec soudures professionnelles </li>
+  </ul>`,
+        finis: ` 
+
+  <strong>Éléments de Bois</strong><br>
+  <ul>
+  <li><strong>Brut</strong> : Bois nu sans finition, coupé aux dimensions.</li>
+
+
+  <li><strong>Prêt à teindre</strong> : Bois nu sans finition, coupé aux dimensions, sablé, avec coins arrondis 1/8".</li>
+
+
+  <li><strong>Laqué</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", application d’une laque (mat ou satiné) sur bois naturel.</li>
+
+
+  <li><strong>Teint (Color Match) + Laqué</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", bois teint (selon échantillon client) puis recouvert d’une laque claire (mat ou satiné).</li>
+
+
+  <li><strong>Huilé</strong> : Coupé aux dimensions, sablé, coins arrondis 1/8", finition huile claire mate sur bois naturel.</li>
+
+
+  </ul>
+  <strong>Éléments en Acier</strong> 
+  <ul><li><strong>Noir mat / Blanc mat</strong> : Peinture industrielle catalysée (mat ou satiné), appliquée au pistolet.</li></ul>
+  `,
+        faqs: `<section class="faq" id="faq">
+  <h2>FAQ</h2>
+  <div class="faq-container">
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Quel est le délai moyen de fabrication ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          4 à 6 semaines après validation du design et réception de l'acompte.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Livrez-vous partout au Québec ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          Oui, dans toute la province. Des frais peuvent s'appliquer selon la
+          région.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Proposez-vous l'installation ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>Oui, installation professionnelle par notre équipe certifiée.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Quel entretien pour un escalier métal‑bois ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          Entretien minimal : dépoussiérage pour le métal, traitement annuel
+          pour le bois.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Faites-vous la prise de mesures ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          <strong>Oui et non.</strong>
+
+          <br /><br />Notre vocation est celle de manufacturier de composantes
+          exclusivement. Ceci dit, nous pouvons référer un entrepreneur pour
+          faire le relevé des mesures nécessaires à la production de nos plans
+          de fabrication lorsque le projet est relativement simple et à une
+          distance raisonnable.
+
+          <br /><br />L’exactitude des mesures pour la fabrication reste
+          toutefois sous la responsabilité du client et/ou de son entrepreneur
+          et/ou de l’installateur. Nos plans de fabrication doivent être
+          vérifiés et approuvés puisque le chantier peut évoluer entre le relevé
+          et l’installation. Nous garantissons seulement la conception selon les
+          plans de fabrication approuvés.
+
+          <br /><br />Pour les clients qui sont à l’aise de mesurer eux-même,
+          nous avons facilité le travail pour notre clientèle. Nous vous
+          invitons à consulter notre guide pour la prise de mesures.
+        </p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" data-faq>
+        Pouvons-nous apporter notre bois ? <span>▼</span>
+      </div>
+      <div class="faq-answer">
+        <p>
+          <strong> Normalement non.</strong>
+
+          <br /><br />La seule exception où nous accepterions de prendre du bois
+          de l’extérieur serait du bois séché au-préalable (pour garantir joints
+          et fini) et que nous avons vu/vérifié pour qu’il n’y ait pas
+          d’impuretés (vis, clous, etc..) qui pourraient endommager nos
+          équipements.
+
+          <br /><br />Le séchage à l’air prend environ 1 an par pouce
+          d’épaisseur. Le séchage au séchoir prend environ 1-3 mois mais est
+          très coûteux (plus que le prix du meuble) et la majorité des séchoirs
+          ont un volume minimum à respecter afin de prendre le mandat.
+
+          <br /><br />Assumant que ces conditions soient rencontrées, nous
+          pourrions en discuter. Autrement nous devrons malheureusement
+          décliner.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>`,
+      },
+    ].map((p) => ({
+      ...p,
+      desc:
+        p.desc ||
+        `<strong>Dimensions standards</strong><br>• Limon en découpe laser/CNC sans soudure apparente<br>• Giron standard 10"<br>• Modèle central supportant des marches jusqu'à 48"`,
+      details:
+        p.details ||
+        `<strong>Finition standard</strong><br>• Peinture industrielle catalysée, noir mat<br><br><strong>Calcul d'enjambées</strong><br>• Le nombre d'enjambées correspond aux pas parcourus entre 2 étages.`,
+      finis: p.finis || `Noir mat, Blanc, Acier brut`,
+    }));
+
+    const MAX_MARCHES = 20;
+
+    for (const p of PRODUCTS) {
+      if (p.category === "Limon central") {
+        p.options = Array.from({ length: MAX_MARCHES - 1 }, (_, i) => {
+          const m = i + 2;
+          const e = m + 1;
+          return `${m} marche${m > 1 ? "s" : ""} (${e} enjambée${
+            e > 1 ? "s" : ""
+          })`;
+        });
+      }
+      if (p.category === "Double limon") {
+        p.options = Array.from({ length: MAX_MARCHES - 1 }, (_, i) => {
+          const m = i + 2;
+          return `${m} marche${m > 1 ? "s" : ""}`;
+        });
+      }
+    }
+    for (const p of PRODUCTS) {
+      const isMarches = (p.category || "").toLowerCase() === "marches";
+      if (isMarches) {
+        p.colors = [];
+        continue;
+      }
+      const bw = new Set(["#000", "#FFF", "#fff"]);
+      const cleaned = (p.colors || []).filter((c) => bw.has(String(c)));
+      p.colors = cleaned.length
+        ? Array.from(new Set(cleaned)).map((c) => c.toUpperCase())
+        : ["#000", "#FFF"];
+    }
+
+    const STATE = {
+      category: null,
+      maxPrice: 10000,
+      sort: "popular",
+      search: "",
+      selectedColors: {},
+    };
+
+    function swForCard(p) {
+      const colors = normalizedColorsFor(p);
+      if (!colors.length) return "";
+
+      const sel = STATE.selectedColors[p.id] || null;
+
+      return `<div class="swatches" role="group" aria-label="Choisir une couleur">
+      ${colors
+        .map((c) => {
+          const pressed = sel === c;
+          const pressedStyle = pressed
+            ? "outline:2px solid #111;border-color:#111;"
+            : "outline:2px solid rgba(255,255,255,0.9);border-color:rgba(0,0,0,0.15);";
+          return `<button type="button"
+                  class="swatch${pressed ? " selected" : ""}"
+                  style="background:${c};${pressedStyle}"
+                  data-id="${p.id}"
+                  data-color="${c}"
+                  aria-label="Couleur ${colorLabel(c)}"
+                  aria-pressed="${pressed ? "true" : "false"}"></button>`;
+        })
+        .join("")}
+    </div>`;
+    }
+
+    function card(p) {
+      const start = getStartPrice(p);
+      return `<article class="card" data-id="${
+        p.id
+      }" tabindex="0" aria-label="${p.name}">
+          <div class="media">
+          <img src="${p.image}" alt="${p.name}" loading="lazy" decoding="async">
+            ${swForCard(p)}
+          </div>
+          <div class="content">
+            <div class="name">${p.name}</div>
+            <div class="price">
+              <span class="from">À PARTIR DE</span>
+              <strong>${fmt(start)}</strong>
+            </div>
+          </div>
+        </article>`;
+    }
+
+    function render() {
+      let arr = [...PRODUCTS];
+      if (STATE.search) {
+        const q = STATE.search.toLowerCase();
+        arr = arr.filter(
+          (p) =>
+            p.name.toLowerCase().includes(q) ||
+            (p.category || "").toLowerCase().includes(q)
+        );
+      }
+      arr = arr.filter((p) => getStartPrice(p) <= STATE.maxPrice);
+      if (STATE.category)
+        arr = arr.filter(
+          (p) =>
+            (p.category || "").toLowerCase() === STATE.category.toLowerCase()
+        );
+      switch (STATE.sort) {
+        case "price-asc":
+          arr.sort((a, b) => getStartPrice(a) - getStartPrice(b));
+          break;
+        case "price-desc":
+          arr.sort((a, b) => getStartPrice(b) - getStartPrice(a));
+          break;
+        case "name-asc":
+          arr.sort((a, b) => a.name.localeCompare(b.name, "fr"));
+          break;
+        case "name-desc":
+          arr.sort((a, b) => b.name.localeCompare(a.name, "fr"));
+          break;
+      }
+
+      const grid = $("#grid");
+      grid.innerHTML = arr.map(card).join("");
+      $("#count").textContent = `${arr.length} produit${
+        arr.length > 1 ? "s" : ""
+      }`;
+
+      $$(".card").forEach((c, i) => c.classList.add("reveal"));
+    }
+
+    function initCategories() {
+      const cats = [
+        ...new Set(
+          PRODUCTS.map((p) => (p.category || "").trim()).filter(Boolean)
+        ),
+      ].sort();
+      $("#categoryChips").innerHTML = cats
+        .map(
+          (c) =>
+            `<button type="button" class="chip" data-cat="${c}">${c}</button>`
+        )
+        .join("");
+      $("#categoryChips").addEventListener("click", (e) => {
+        const b = e.target.closest(".chip");
+        if (!b) return;
+        const was = b.classList.contains("active");
+        $$(".chip").forEach((x) => x.classList.remove("active"));
+        STATE.category = was ? null : b.dataset.cat;
+        if (!was) b.classList.add("active");
+        render();
+      });
+      $("#clearCategory").addEventListener("click", () => {
+        $$(".chip").forEach((x) => x.classList.remove("active"));
+        STATE.category = null;
+        render();
+      });
+    }
+
+    function parseMarchesFromOption(text) {
+      const m1 = text.match(/(\d+)\s*marche/i);
+      if (m1) return parseInt(m1[1], 10);
+      const m2 = text.match(/^\s*(\d+)\s*marche/i);
+      if (m2) return parseInt(m2[1], 10);
+      const e = text.match(/(\d+)\s*enjam/i);
+      if (e) return Math.max(parseInt(e[1], 10) - 1, 1);
+      return null;
+    }
+
+    function openProduct(id) {
+      const p = PRODUCTS.find((x) => x.id === id);
+      if (!p) return;
+
+      $("#modalTitle").textContent = p.name;
+      $("#modalPrice").innerHTML = `à partir de <strong>${fmt(
+        getStartPrice(p)
+      )}</strong>`;
+      $("#mMain").src = p.images[0];
+      $("#mMain").alt = p.name;
+
+      const thumbs = $("#mThumbs");
+      thumbs.innerHTML = p.images
+        .map(
+          (src, i) =>
+            `<button type="button"
+            class="thumb ${i === 0 ? "active" : ""}"
+            data-i="${i}"
+            aria-label="Voir l’image ${i + 1} de ${p.images.length}"
+            style="background-image:url('${src}');background-size:cover;background-position:center"></button>`
+        )
+        .join("");
+
+      $$(".thumb", thumbs).forEach((t) => {
+        t.addEventListener("click", () => {
+          $$(".thumb", thumbs).forEach((x) => x.classList.remove("active"));
+          t.classList.add("active");
+          $("#mMain").src = p.images[Number(t.dataset.i)];
+        });
+      });
+
+      const sel = $("#optionSelect");
+      sel.innerHTML = p.options
+        .map((o) => `<option value="${o}">${o}</option>`)
+        .join("");
+
+      const ensureAfterOptions = (id, html) => {
+        let row = document.getElementById(id);
+        if (!row) {
+          row = document.createElement("div");
+          row.className = "opt-row";
+          row.id = id;
+          row.innerHTML = html;
+          $("#optionSelect").parentElement.after(row);
+        }
+        return row;
+      };
+
+      if ((p.category || "").toLowerCase() === "marches") {
+        ensureAfterOptions(
+          "qtyRow",
+          `<label style="font-size:12px;color:#6b7280">Nombre de marches</label>
+      <input id="qtyInput" type="number" min="1" max="40" step="1" value="1"
+              style="border:1px solid #ececec;border-radius:10px;padding:10px 12px;width:180px">`
+        );
+
+        ensureAfterOptions(
+          "thicknessRow",
+          `<label style="font-size:12px;color:#6b7280">Épaisseur du bois</label>
+      <select id="thicknessSelect" style="border:1px solid #ececec;border-radius:10px;padding:10px 12px;"></select>`
+        );
+        const tSel = document.getElementById("thicknessSelect");
+        tSel.innerHTML = THICKNESS_KEYS.map(
+          (k) => `<option value="${k}">${THICKNESS_LABELS[k]}</option>`
+        ).join("");
+        tSel.value = "1_1_16";
+        tSel.addEventListener("change", updatePriceUI);
+
+        document.getElementById("colorRow")?.remove();
+      } else {
+        document.getElementById("qtyRow")?.remove();
+        document.getElementById("thicknessRow")?.remove();
+      }
+
+      const removeRow = (id) => {
+        const r = document.getElementById(id);
+        if (r) r.remove();
+      };
+
+      const colors = normalizedColorsFor(p);
+      if (colors.length) {
+        const row = ensureAfterOptions(
+          "colorRow",
+          `<label style="font-size:12px;color:#6b7280">Couleur</label>
+      <div id="modalSwatches" style="display:flex;gap:8px;flex-wrap:wrap;"></div>
+      <div id="colorChosen" style="font-size:12px;color:#6b7280;margin-top:2px;"></div>`
+        );
+
+        const mount = $("#modalSwatches");
+        const initial = STATE.selectedColors[p.id] || colors[0];
+        STATE.selectedColors[p.id] = initial;
+
+        const buildBtn = (c, pressed) => {
+          const pressedStyle = pressed
+            ? "outline:2px solid #111;border-color:#111;"
+            : "outline:2px solid rgba(255,255,255,0.9);border-color:rgba(0,0,0,0.15);";
+          return `<button type="button"
+                class="swatch${pressed ? " selected" : ""}"
+                style="background:${c};width:22px;height:22px;border-radius:999px;${pressedStyle}"
+                data-color="${c}"
+                aria-label="Couleur ${colorLabel(c)}"
+                aria-pressed="${pressed ? "true" : "false"}"></button>`;
+        };
+
+        mount.innerHTML = colors
+          .map((c) => buildBtn(c, initial === c))
+          .join("");
+
+        const updateColorUI = () => {
+          const curr = STATE.selectedColors[p.id];
+          $$(".swatch", mount).forEach((b) => {
+            const on = b.dataset.color === curr;
+            b.classList.toggle("selected", on);
+            b.setAttribute("aria-pressed", on ? "true" : "false");
+            b.style.outline = on
+              ? "2px solid #111"
+              : "2px solid rgba(255,255,255,0.9)";
+            b.style.borderColor = on ? "#111" : "rgba(0,0,0,0.15)";
+          });
+          $("#colorChosen").textContent = curr
+            ? `Couleur choisie : ${colorLabel(curr)}`
+            : "";
+        };
+
+        mount.addEventListener("click", (e) => {
+          const btn = e.target.closest(".swatch");
+          if (!btn) return;
+          STATE.selectedColors[p.id] = btn.dataset.color;
+          updateColorUI();
+          updatePriceUI();
+        });
+        updateColorUI();
+      } else {
+        document.getElementById("colorRow")?.remove();
+      }
+
+      if (p.unit === "/pied linéaire") {
+        ensureAfterOptions(
+          "lenRow",
+          `<label style="font-size:12px;color:#6b7280">Longueur totale (pi linéaire)</label>
+            <input id="lenInput" type="number" min="1" max="200" step="0.5" value="1"
+                    style="border:1px solid #ececec;border-radius:10px;padding:10px 12px;width:180px">`
+        );
+      } else {
+        removeRow("lenRow");
+      }
+
+      const isRampOrHandrail =
+        p.unit === "/pied linéaire" &&
+        (RAMPES_PRICES[p.id] || MAIN_COURANTE_ONLY[p.id]);
+
+      if (isRampOrHandrail) {
+        ensureAfterOptions(
+          "matRow",
+          `<label style="font-size:12px;color:#6b7280">Type de main courante</label>
+            <select id="matSelect" style="border:1px solid #ececec;border-radius:10px;padding:10px 12px;"></select>`
+        );
+        const matSelect = $("#matSelect");
+        matSelect.innerHTML = materialKeys
+          .map((k) => `<option value="${k}">${RAMPES_MATERIALS[k]}</option>`)
+          .join("");
+        matSelect.value = "metal_1x3";
+
+        ensureAfterOptions(
+          "paintRow",
+          `<label style="font-size:12px;color:#6b7280">Peinture (métal)</label>
+            <select id="paintSelect" style="border:1px solid #ececec;border-radius:10px;padding:10px 12px;">
+              ${Object.entries(PEINTURE_ADD)
+                .map(([k, v]) => `<option value="${k}">${v.label}</option>`)
+                .join("")}
+            </select>`
+        );
+
+        ensureAfterOptions(
+          "woodFinishRow",
+          `<label style="font-size:12px;color:#6b7280">Finition du bois</label>
+            <select id="woodFinishSelect" style="border:1px solid #ececec;border-radius:10px;padding:10px 12px;">
+              ${Object.entries(FINITION_BOIS_ADD)
+                .map(([k, v]) => `<option value="${k}">${v.label}</option>`)
+                .join("")}
+            </select>`
+        );
+
+        function toggleMetalWoodRows() {
+          const matKey = $("#matSelect").value;
+          const showMetal = isMetalKey(matKey);
+          $("#paintRow").style.display = showMetal ? "" : "none";
+          $("#woodFinishRow").style.display = showMetal ? "none" : "";
+        }
+        toggleMetalWoodRows();
+
+        matSelect.addEventListener("change", () => {
+          toggleMetalWoodRows();
+          updatePriceUI();
+        });
+        $("#paintSelect").addEventListener("change", updatePriceUI);
+        $("#woodFinishSelect").addEventListener("change", updatePriceUI);
+      } else {
+        removeRow("matRow");
+        removeRow("paintRow");
+        removeRow("woodFinishRow");
+      }
+
+      {
+        const priceEl = $("#modalPrice");
+        const qbtn = $("#quoteBtn");
+        if (priceEl && qbtn) {
+          qbtn.parentElement.insertBefore(priceEl, qbtn);
+        }
+      }
+
+      function updatePriceUI() {
+        if (!p.unit) {
+          const optionText = sel.value || "";
+          let marches = parseMarchesFromOption(optionText);
+          if (!isFinite(marches) || marches == null) {
+            marches = 2;
+          }
+          if (PRICE_MATRIX[p.id]) marches = Math.max(2, marches);
+          const price = getDynamicPrice(p, marches);
+          $("#modalPrice").innerHTML = `à partir de <strong>${fmt(
+            price
+          )}</strong>`;
+          return;
+        }
+
+        if (p.unit === "/marche") {
+          const qty = Math.max(1, parseInt($("#qtyInput")?.value || "1", 10));
+          const tKey = $("#thicknessSelect")?.value || "1_1_16";
+          const price = getDynamicPrice(p, qty, { thicknessKey: tKey });
+          $("#modalPrice").innerHTML = `à partir de <strong>${fmt(
+            price
+          )}</strong>`;
+          return;
+        }
+
+        if (p.unit === "/pied linéaire") {
+          const len = Math.max(1, parseFloat($("#lenInput")?.value || "1"));
+          const ctx = {};
+          if ($("#matSelect")) ctx.materialKey = $("#matSelect").value;
+          if ($("#paintSelect")) ctx.paint = $("#paintSelect").value;
+          if ($("#woodFinishSelect"))
+            ctx.woodFinish = $("#woodFinishSelect").value;
+
+          if (p.id === "p13" && $("#optionSelect")) {
+            const profile = $("#optionSelect").value;
+            ctx.materialKey = PROFILE_MAP[profile] || ctx.materialKey;
+          }
+
+          const price = getDynamicPrice(p, len, ctx);
+          $("#modalPrice").innerHTML = `à partir de <strong>${fmt(
+            price
+          )}</strong>`;
+          return;
+        }
+
+        $("#modalPrice").innerHTML = `à partir de <strong>${fmt(
+          getStartPrice(p)
+        )}</strong>`;
+      }
+
+      sel.addEventListener("change", updatePriceUI);
+      $("#qtyInput")?.addEventListener("input", updatePriceUI);
+      $("#lenInput")?.addEventListener("input", updatePriceUI);
+      updatePriceUI();
+
+      $("#quoteBtn").onclick = () => {
+        closeModal();
+        $("#formModal").classList.add("active");
+        document.body.classList.add("modal-open");
+      };
+
+      const callBtn = $("#callBtn");
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      if (isMobile) {
+        callBtn.href = "tel:+14388014355";
+        callBtn.textContent = "Appelez-nous maintenant";
+      }
+
+      function bindFaqToggles() {
+        const root = document.getElementById("tabBody");
+
+        root.onclick = (e) => {
+          const q = e.target.closest("[data-faq]");
+          if (!q || !root.contains(q)) return;
+
+          const item = q.closest(".faq-item");
+
+          root.querySelectorAll(".faq-item").forEach((i) => {
+            if (i !== item) i.classList.remove("active");
+          });
+          if (item) item.classList.toggle("active");
+        };
+      }
+
+      function setTab(key) {
+        $$(".tab-btn").forEach((btn) =>
+          btn.classList.toggle("active", btn.dataset.tab === key)
+        );
+        const html =
+          (key === "details"
+            ? p.details
+            : key === "finis"
+            ? p.finis
+            : key === "faqs"
+            ? p.faqs
+            : p.desc) || "";
+        $("#tabBody").innerHTML = `<div>${html}</div>`;
+        if (key === "faqs") bindFaqToggles();
+        else $("#tabBody").onclick = null;
+      }
+
+      $$(".tab-btn").forEach((b) => (b.onclick = () => setTab(b.dataset.tab)));
+      setTab("desc");
+
+      $("#eemOverlay").classList.add("eem-active");
+      document.body.classList.add("modal-open");
+
+      const guard = (ev) => ev.stopImmediatePropagation();
+      document.addEventListener("pointerdown", guard, true);
+      setTimeout(
+        () => document.removeEventListener("pointerdown", guard, true),
+        200
+      );
+      document.querySelectorAll("[data-faq]").forEach((q) => {
+        q.addEventListener("click", () => {
+          const item = q.closest(".faq-item");
+          document.querySelectorAll(".faq-item").forEach((i) => {
+            if (i !== item) i.classList.remove("active");
+          });
+          item.classList.toggle("active");
+        });
+      });
+    }
+
+    let blockClicksUntil = 0;
+    document.addEventListener(
+      "click",
+      (ev) => {
+        if (Date.now() < blockClicksUntil) ev.stopImmediatePropagation();
+      },
+      true
+    );
+
+    function closeModal() {
+      $("#eemOverlay").classList.remove("eem-active");
+      document.body.classList.remove("modal-open");
+      document.activeElement?.blur?.();
+      blockClicksUntil = Date.now() + 400;
+    }
+
+    const gridEl = document.getElementById("grid");
+
+    gridEl.addEventListener("click", (e) => {
+      const swBtn = e.target.closest(".swatch");
+      if (swBtn && swBtn.dataset.id) {
+        e.preventDefault();
+        e.stopPropagation();
+        const pid = swBtn.dataset.id;
+        const color = swBtn.dataset.color;
+        STATE.selectedColors[pid] = color;
+        render();
+        return;
+      }
+
+      const card = e.target.closest(".card");
+      if (card) {
+        e.preventDefault();
+        e.stopPropagation();
+        openProduct(card.dataset.id);
+      }
+    });
+
+    gridEl.addEventListener("keydown", (e) => {
+      const swBtn = e.target.closest(".swatch");
+      if (swBtn && swBtn.dataset.id && (e.key === "Enter" || e.key === " ")) {
+        e.preventDefault();
+        const pid = swBtn.dataset.id;
+        const color = swBtn.dataset.color;
+        STATE.selectedColors[pid] = color;
+        render();
+        return;
+      }
+    });
+
+    gridEl.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        const card = e.target.closest(".card");
+        if (card) {
+          e.preventDefault();
+          e.stopPropagation();
+          openProduct(card.dataset.id);
+        }
+      }
+    });
+
+    document.getElementById("modalClose").addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      closeModal();
+    });
+    document.getElementById("eemOverlay").addEventListener("click", (e) => {
+      if (e.target === e.currentTarget) {
+        e.preventDefault();
+        e.stopPropagation();
+        closeModal();
+      }
+    });
+    document.getElementById("eemModalRoot").addEventListener("click", (e) => {
+      e.stopPropagation();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (
+        e.key === "Escape" &&
+        $("#eemOverlay").classList.contains("eem-active")
+      )
+        closeModal();
+    });
+
+    $("#sortSelect").addEventListener("change", (e) => {
+      STATE.sort = e.target.value;
+      render();
+    });
+    $("#maxPrice").addEventListener("input", (e) => {
+      STATE.maxPrice = Number(e.target.value);
+      $("#maxLabel").textContent =
+        "$" + new Intl.NumberFormat("en-US").format(STATE.maxPrice);
+      render();
+    });
+    $("#searchInput").addEventListener("input", (e) => {
+      STATE.search = e.target.value.trim();
+      render();
+    });
+    $("#clearAll").addEventListener("click", () => {
+      STATE.category = null;
+      STATE.maxPrice = 10000;
+      STATE.sort = "popular";
+      STATE.search = "";
+      $("#sortSelect").value = "popular";
+      $("#maxPrice").value = 10000;
+      $("#maxLabel").textContent = "$10,000";
+      $("#searchInput").value = "";
+      $$(".chip").forEach((x) => x.classList.remove("active"));
+      render();
+    });
+
+    $("#formClose").addEventListener("click", () => {
+      $("#formModal").classList.remove("active");
+      document.body.classList.remove("modal-open");
+    });
+
+    $("#formModal").addEventListener("click", (e) => {
+      if (e.target === e.currentTarget) {
+        $("#formModal").classList.remove("active");
+        document.body.classList.remove("modal-open");
+      }
+    });
+
+    $(".btn-config").addEventListener("click", (e) => {
+      e.preventDefault();
+      $("#formModal").classList.add("active");
+      document.body.classList.add("modal-open");
+    });
+
+    initCategories();
+    render();
+    const io = new IntersectionObserver(
+      (entries, obs) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const el = entry.target;
+
+          if (el.tagName === "IMG") {
+            el.addEventListener("load", () => el.classList.add("is-loaded"), {
+              once: true,
+            });
+            if (el.dataset.src) el.src = el.dataset.src;
+            if (el.dataset.srcset) el.srcset = el.dataset.srcset;
+          } else {
+            const img = new Image();
+            img.addEventListener(
+              "load",
+              () => {
+                el.style.backgroundImage = `url("${el.dataset.bg}")`;
+                el.classList.add("is-loaded");
+              },
+              { once: true }
+            );
+            img.src = el.dataset.bg;
+          }
+
+          obs.unobserve(el);
+        });
+      },
+      { rootMargin: "0px", threshold: 0.01 }
+    );
+
+    document
+      .querySelectorAll("img[data-src], img[data-srcset]")
+      .forEach((img) => {
+        img.classList.add("fade-img");
+        io.observe(img);
+      });
+    document.querySelectorAll("[data-bg]").forEach((el) => {
+      el.classList.add("lazy-bg");
+      el.style.backgroundImage = "none";
+      io.observe(el);
+    });
+
+    (function () {
+      const mq = window.matchMedia("(max-width: 640px)");
+      const tabHead = document.querySelector(".tab-head");
+      if (!tabHead) return;
+
+      tabHead.setAttribute("role", "tablist");
+      document.querySelectorAll(".tab-btn").forEach((btn, i) => {
+        btn.setAttribute("role", "tab");
+        btn.setAttribute(
+          "tabindex",
+          btn.classList.contains("active") || i === 0 ? "0" : "-1"
+        );
+      });
+
+      const centerTab = (el) => {
+        if (!mq.matches || !el) return;
+        el.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+          inline: "center",
+        });
+      };
+
+      tabHead.addEventListener("click", (e) => {
+        const btn = e.target.closest(".tab-btn");
+        if (btn) centerTab(btn);
+      });
+
+      tabHead.addEventListener("keydown", (e) => {
+        if (!e.target.classList.contains("tab-btn")) return;
+        let next = null;
+        if (e.key === "ArrowRight") next = e.target.nextElementSibling;
+        if (e.key === "ArrowLeft") next = e.target.previousElementSibling;
+        if (next && next.classList.contains("tab-btn")) {
+          next.focus();
+          next.click();
+          centerTab(next);
+          e.preventDefault();
+        }
+      });
+
+      let isDown = false,
+        startX = 0,
+        startLeft = 0,
+        pid = null;
+      const onDown = (e) => {
+        if (!mq.matches) return;
+        isDown = true;
+        pid = e.pointerId;
+        tabHead.setPointerCapture(pid);
+        startX = e.clientX;
+        startLeft = tabHead.scrollLeft;
+      };
+      const onMove = (e) => {
+        if (!isDown) return;
+        tabHead.scrollLeft = startLeft - (e.clientX - startX);
+      };
+      const onUp = () => {
+        isDown = false;
+        if (pid !== null)
+          try {
+            tabHead.releasePointerCapture(pid);
+          } catch {}
+        pid = null;
+      };
+      tabHead.addEventListener("pointerdown", onDown);
+      tabHead.addEventListener("pointermove", onMove);
+      tabHead.addEventListener("pointerup", onUp);
+      tabHead.addEventListener("pointercancel", onUp);
+
+      const obs = new MutationObserver(() => {
+        const active = tabHead.querySelector(".tab-btn.active");
+        document
+          .querySelectorAll(".tab-btn")
+          .forEach((b) =>
+            b.setAttribute("tabindex", b === active ? "0" : "-1")
+          );
+        centerTab(active);
+      });
+      document
+        .querySelectorAll(".tab-btn")
+        .forEach((b) =>
+          obs.observe(b, { attributes: true, attributeFilter: ["class"] })
+        );
+    })();
+  });
+</script>
+<script>
+  (function initModalCleanupObserver() {
+    const onReady = (fn) =>
+      document.readyState !== "loading"
+        ? fn()
+        : document.addEventListener("DOMContentLoaded", fn);
+
+    onReady(() => {
+      const $ = (s, el = document) => el.querySelector(s);
+      const $$ = (s, el = document) => Array.from(el.querySelectorAll(s));
+
+      const overlay = $("#eemOverlay");
+      const formModal = $("#formModal");
+      if (!overlay || !formModal) return;
+
+      function anyModalOpen() {
+        return (
+          overlay.classList.contains("eem-active") ||
+          formModal.classList.contains("active")
+        );
+      }
+
+      function cleanProductModal() {
+        [
+          "colorRow",
+          "qtyRow",
+          "thicknessRow",
+          "lenRow",
+          "matRow",
+          "metalQualRow",
+          "paintRow",
+          "woodFinishRow",
+        ].forEach((id) => document.getElementById(id)?.remove());
+
+        const img = $("#mMain");
+        if (img) {
+          img.removeAttribute("src");
+          img.alt = "";
+        }
+        $("#mThumbs")?.replaceChildren();
+        $("#optionSelect")?.replaceChildren();
+        $("#modalTitle") && ($("#modalTitle").textContent = "Produit");
+        $("#modalPrice") && ($("#modalPrice").textContent = "");
+        $("#tabBody") && ($("#tabBody").textContent = "");
+        $("#eemModalRoot")?.scrollTo?.(0, 0);
+
+        document.activeElement?.blur?.();
+      }
+
+      function cleanFormModalOnClose() {
+        const ifr = $("#formModal iframe");
+        if (ifr) {
+          if (!ifr.dataset.src) ifr.dataset.src = ifr.src;
+          ifr.src = "about:blank";
+        }
+        document.activeElement?.blur?.();
+      }
+      function ensureFormIframeLoadedOnOpen() {
+        const ifr = $("#formModal iframe");
+        if (ifr && ifr.src === "about:blank" && ifr.dataset.src) {
+          requestAnimationFrame(() => (ifr.src = ifr.dataset.src));
+        }
+      }
+
+      function syncBodyLock() {
+        const open = anyModalOpen();
+        document.body.classList.toggle("modal-open", open);
+        if (!open) {
+          document.body.style.overflow = "";
+          document.body.style.position = "";
+          document.body.style.touchAction = "";
+        }
+      }
+
+      const BAD_BACKDROPS = [
+        ".modal-backdrop",
+        ".ReactModal__Overlay",
+        ".ghl-modal",
+        ".ghl-overlay",
+      ];
+      function purgeBackdrops() {
+        BAD_BACKDROPS.forEach((sel) =>
+          $$(sel).forEach((node) => node.remove())
+        );
+      }
+
+      const attrObs = new MutationObserver((recs) => {
+        for (const r of recs) {
+          if (r.type !== "attributes" || r.attributeName !== "class") continue;
+
+          if (r.target === overlay) {
+            if (!overlay.classList.contains("eem-active")) {
+              cleanProductModal();
+            }
+          }
+          if (r.target === formModal) {
+            if (formModal.classList.contains("active")) {
+              ensureFormIframeLoadedOnOpen();
+            } else {
+              cleanFormModalOnClose();
+            }
+          }
+        }
+        syncBodyLock();
+        if (!anyModalOpen()) purgeBackdrops();
+      });
+
+      attrObs.observe(overlay, {
+        attributes: true,
+        attributeFilter: ["class"],
+      });
+      attrObs.observe(formModal, {
+        attributes: true,
+        attributeFilter: ["class"],
+      });
+
+      const domObs = new MutationObserver(() => {
+        if (!anyModalOpen()) purgeBackdrops();
+      });
+      domObs.observe(document.body, { childList: true, subtree: true });
+    });
+  })();
+</script>
